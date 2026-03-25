@@ -84,7 +84,8 @@ Performs deterministic, read-only repository analysis and emits normalized findi
 - weak cookie configuration hints
 - dangerous CI/CD permission patterns
 - container and IaC hygiene signals
-- dangerous code patterns such as `eval`, unsafe HTML sinks, weak subprocess usage, and insecure JWT handling hints
+- dangerous code patterns such as `eval`, unsafe HTML sinks, shell-enabled subprocess usage, insecure JWT handling, Python pickle deserialization, unsafe YAML loading, Java `Runtime.exec`, and SQL string concatenation hints
+- framework and deployment misconfiguration signals such as Flask debug mode, Django `DEBUG=True`, Spring actuator overexposure, browser token storage in `localStorage`, TLS verification bypasses, Kubernetes privileged containers, and Kubernetes `hostPath` mounts
 - dependency manifest discovery and basic ecosystem context
 
 This script is conservative by design. It produces candidate findings that still benefit from human validation.
@@ -99,6 +100,19 @@ Combines one or more JSON findings files into either:
 ### `scripts/run-local-evals.js`
 
 Runs a deterministic local evaluation suite for the bundled tooling and writes grading plus benchmark artifacts into a sibling workspace. This does not replace model-based skill benchmarking, but it does give the repository a repeatable offline eval loop for scanner and report quality.
+
+Current output workspace:
+
+- [`security-testing-skill-workspace/local-iteration-1`](../security-testing-skill-workspace/local-iteration-1)
+
+Generated artifacts include:
+
+- `outputs/` files for each eval
+- `eval_metadata.json`
+- `grading.json`
+- `timing.json`
+- `benchmark.json`
+- `benchmark.md`
 
 ## Strengthening Ideas Borrowed From Other Security Skills
 
@@ -171,6 +185,12 @@ node scripts/generate-report.js sandbox/raw-findings.json --format sarif --outpu
 npm run eval:local
 ```
 
+This writes benchmark and grading artifacts into the sibling workspace directory:
+
+```text
+../security-testing-skill-workspace/local-iteration-1/
+```
+
 ## Skill Usage Guidance
 
 Use this skill for prompts such as:
@@ -227,6 +247,12 @@ The repo includes:
 - Node-based tests for the bundled scripts
 - GitHub Actions CI for validation on push and pull request
 - a deterministic local eval harness that writes grading and benchmark artifacts
+
+The local eval harness currently verifies:
+
+- scanner detection on the bundled risky sample repo
+- markdown report generation
+- SARIF-style report generation
 
 The intended operating pattern is:
 
