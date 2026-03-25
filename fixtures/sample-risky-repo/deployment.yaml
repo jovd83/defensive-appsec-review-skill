@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-risky-app
+spec:
+  template:
+    spec:
+      containers:
+        - name: app
+          image: sample/app:latest
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: host-logs
+              mountPath: /var/log/host
+      volumes:
+        - name: host-logs
+          hostPath:
+            path: /var/log

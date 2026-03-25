@@ -1,0 +1,46 @@
+{
+  "skill_name": "security-testing-skill",
+  "evals": [
+    {
+      "id": 101,
+      "name": "scan-risky-repo",
+      "type": "scan",
+      "target": "fixtures/sample-risky-repo",
+      "surface": "repo",
+      "standard": "nist-ssdf",
+      "expectations": [
+        "Findings include hardcoded credential or environment-file exposure",
+        "Findings include unsafe HTML rendering detection",
+        "Findings include shell-enabled subprocess execution detection",
+        "Findings include insecure JWT handling detection",
+        "Findings include at least one file:line style location"
+      ]
+    },
+    {
+      "id": 102,
+      "name": "report-markdown",
+      "type": "report_md",
+      "inputs": [
+        "examples/sample-findings.json"
+      ],
+      "expectations": [
+        "Markdown report contains the target title",
+        "Markdown report contains location information",
+        "Markdown report contains fix effort information"
+      ]
+    },
+    {
+      "id": 103,
+      "name": "report-sarif",
+      "type": "report_sarif",
+      "inputs": [
+        "examples/sample-findings.json"
+      ],
+      "expectations": [
+        "SARIF output uses version 2.1.0",
+        "SARIF output contains at least one result",
+        "SARIF output includes file location data"
+      ]
+    }
+  ]
+}

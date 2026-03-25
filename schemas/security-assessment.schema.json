@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentskills.io/schemas/security-assessment.schema.json",
+  "title": "Security Assessment Findings Envelope",
+  "type": "object",
+  "required": [
+    "metadata",
+    "findings"
+  ],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": [
+        "target",
+        "target_surface",
+        "standard",
+        "timestamp",
+        "generated_by"
+      ],
+      "properties": {
+        "target": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_surface": {
+          "type": "string",
+          "enum": [
+            "web",
+            "api",
+            "mobile",
+            "repo",
+            "iac",
+            "pipeline",
+            "mixed"
+          ]
+        },
+        "standard": {
+          "type": "string",
+          "minLength": 1
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "generated_by": {
+          "type": "string",
+          "minLength": 1
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "title",
+          "asset",
+          "category",
+          "cwe",
+          "cvss_v4",
+          "confidence",
+          "evidence",
+          "reproduction_steps",
+          "business_impact",
+          "remediation"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "asset": {
+            "type": "string",
+            "minLength": 1
+          },
+          "location": {
+            "type": "string",
+            "minLength": 1
+          },
+          "category": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cwe": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cvss_v4": {
+            "type": "string",
+            "minLength": 1
+          },
+          "confidence": {
+            "type": "string",
+            "enum": [
+              "Low",
+              "Medium",
+              "High"
+            ]
+          },
+          "framework_mapping": {
+            "type": "object",
+            "properties": {
+              "standard": {
+                "type": "string"
+              },
+              "control": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": true
+          },
+          "evidence": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reproduction_steps": {
+            "type": "string",
+            "minLength": 1
+          },
+          "business_impact": {
+            "type": "string",
+            "minLength": 1
+          },
+          "remediation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fix_effort": {
+            "type": "string",
+            "enum": [
+              "S",
+              "M",
+              "L"
+            ]
+          },
+          "references": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": false
+}

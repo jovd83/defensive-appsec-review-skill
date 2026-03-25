@@ -1,0 +1,31 @@
+{
+  "metadata": {
+    "target": "sample-risky-repo",
+    "target_surface": "repo",
+    "standard": "nist-ssdf",
+    "timestamp": "2026-03-25T00:00:00.000Z",
+    "generated_by": "security-testing-skill/examples",
+    "notes": "Illustrative sample output"
+  },
+  "findings": [
+    {
+      "title": "Potential hardcoded credential detected (inline secret assignment)",
+      "asset": ".env",
+      "location": ".env",
+      "category": "Credential Management",
+      "cwe": "CWE-798: Use of Hard-coded Credentials",
+      "cvss_v4": "8.6 (High)",
+      "confidence": "Medium",
+      "framework_mapping": {
+        "standard": "nist-ssdf",
+        "control": "Secret exposure prevention"
+      },
+      "evidence": "Matched inline secret assignment pattern in .env.",
+      "reproduction_steps": "1. Open .env.\n2. Review the committed secret-like value.",
+      "business_impact": "Live credentials in source code can enable unauthorized access.",
+      "remediation": "Move credentials to a secret manager and rotate any exposed values.",
+      "fix_effort": "M",
+      "references": []
+    }
+  ]
+}
