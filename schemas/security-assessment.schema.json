@@ -46,8 +46,240 @@
           "type": "string",
           "minLength": 1
         },
+        "standard_family": {
+          "type": "string"
+        },
+        "coverage_areas": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "blind_spots": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_tools": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "component_posture": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "kind",
+              "review_status",
+              "confidence",
+              "evidence_mode",
+              "checked_at"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "version": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "library",
+                  "tool",
+                  "source",
+                  "analysis-source"
+                ]
+              },
+              "ecosystem": {
+                "type": "string"
+              },
+              "manifest_path": {
+                "type": "string"
+              },
+              "origin": {
+                "type": "string"
+              },
+              "review_status": {
+                "type": "string",
+                "enum": [
+                  "favorable",
+                  "caution",
+                  "concern",
+                  "unknown"
+                ]
+              },
+              "security_posture": {
+                "type": "string",
+                "enum": [
+                  "favorable",
+                  "caution",
+                  "concern",
+                  "unknown"
+                ]
+              },
+              "maintenance_posture": {
+                "type": "string",
+                "enum": [
+                  "favorable",
+                  "caution",
+                  "concern",
+                  "unknown"
+                ]
+              },
+              "provenance_posture": {
+                "type": "string",
+                "enum": [
+                  "favorable",
+                  "caution",
+                  "concern",
+                  "unknown"
+                ]
+              },
+              "confidence": {
+                "type": "string",
+                "enum": [
+                  "Low",
+                  "Medium",
+                  "High"
+                ]
+              },
+              "evidence_mode": {
+                "type": "string",
+                "enum": [
+                  "offline-only",
+                  "live",
+                  "mixed"
+                ]
+              },
+              "checked_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "evidence_sources": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "notes": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": true
+          }
+        },
         "notes": {
           "type": "string"
+        },
+        "scan_telemetry": {
+          "type": "object",
+          "properties": {
+            "scan_started_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "scan_completed_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "scan_depth": {
+              "type": "string",
+              "enum": [
+                "quick",
+                "deep"
+              ]
+            },
+            "files_discovered": {
+              "type": "number"
+            },
+            "files_scanned": {
+              "type": "number"
+            },
+            "bytes_scanned": {
+              "type": "number"
+            },
+            "heuristic_checks_run": {
+              "type": "number"
+            },
+            "manifests_detected": {
+              "type": "number"
+            },
+            "directories_skipped": {
+              "type": "number"
+            },
+            "elapsed_ms": {
+              "type": "number"
+            },
+            "skipped_directories": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "skipped_files": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "number"
+              }
+            },
+            "skipped_file_examples": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "findings_by_rule": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "number"
+              }
+            },
+            "findings_by_category": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "number"
+              }
+            },
+            "external_inputs_provided": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "autodiscovered_external_inputs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "external_sources_loaded": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            },
+            "external_sources_failed": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            },
+            "external_findings_imported": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true
         }
       },
       "additionalProperties": true
@@ -81,6 +313,18 @@
             "type": "string",
             "minLength": 1
           },
+          "line_number": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "class_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "code_snippet": {
+            "type": "string",
+            "minLength": 1
+          },
           "category": {
             "type": "string",
             "minLength": 1
@@ -101,6 +345,25 @@
               "High"
             ]
           },
+          "status": {
+            "type": "string",
+            "enum": [
+              "new",
+              "needs-review",
+              "in-progress",
+              "accepted-risk",
+              "fixed",
+              "deferred"
+            ]
+          },
+          "owner": {
+            "type": "string",
+            "minLength": 1
+          },
+          "due_date": {
+            "type": "string",
+            "format": "date"
+          },
           "framework_mapping": {
             "type": "object",
             "properties": {
@@ -109,9 +372,97 @@
               },
               "control": {
                 "type": "string"
+              },
+              "provenance": {
+                "type": "object",
+                "properties": {
+                  "primary": {
+                    "type": "string",
+                    "enum": ["supplied", "inferred", "not-recorded"]
+                  },
+                  "nist": {
+                    "type": "string",
+                    "enum": ["supplied", "inferred", "not-recorded"]
+                  },
+                  "asvs": {
+                    "type": "string",
+                    "enum": ["supplied", "inferred", "not-recorded"]
+                  },
+                  "cis": {
+                    "type": "string",
+                    "enum": ["supplied", "inferred", "not-recorded"]
+                  },
+                  "scvs": {
+                    "type": "string",
+                    "enum": ["supplied", "inferred", "not-recorded"]
+                  },
+                  "slsa": {
+                    "type": "string",
+                    "enum": ["supplied", "inferred", "not-recorded"]
+                  },
+                  "owasp": {
+                    "type": "string",
+                    "enum": ["supplied", "inferred", "not-recorded"]
+                  }
+                },
+                "additionalProperties": false
+              },
+              "nist": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "asvs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "cis": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "scvs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "slsa": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "owasp": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "references": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
               }
             },
             "additionalProperties": true
+          },
+          "verification_tier": {
+            "type": "string",
+            "enum": [
+              "deterministic-static",
+              "heuristic-static",
+              "manual-required"
+            ]
+          },
+          "source_tool": {
+            "type": "string",
+            "minLength": 1
           },
           "evidence": {
             "type": "string",
