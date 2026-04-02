@@ -13,6 +13,7 @@ Focus on:
 - CI/CD permissions and trust boundaries
 - IaC and container configuration
 - logging, telemetry, and sensitive data handling
+- external SAST and SCA result consolidation from standard tool outputs
 
 ### Web Application Review
 
@@ -23,6 +24,7 @@ Focus on:
 - input handling and output encoding
 - file upload and content-processing risks
 - security headers, cookies, CORS, and transport posture
+- open redirect, SSRF, path traversal, and weak crypto heuristics when code artifacts expose those flows
 
 ### API Review
 
@@ -34,6 +36,7 @@ Focus on:
 - authentication token handling
 - rate limiting, abuse controls, and auditability
 - REST, GraphQL, SOAP, and gRPC contract review when artifacts are available
+- deterministic source heuristics for BOLA review targets, mass assignment, SSRF, unsafe redirects, and unsafe file access
 
 ### Mobile Review
 
@@ -74,6 +77,8 @@ Focus on:
 - business logic abuse
 - supply chain and third-party risk
 - compliance-aligned control mapping
+- explicit declaration of static-analysis blind spots for runtime-only verification areas
+- normalization of heterogeneous tool output into one evidence contract
 
 ## Out of Scope for This Skill
 

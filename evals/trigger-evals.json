@@ -1,0 +1,66 @@
+[
+  {
+    "query": "We have a Node API repo in a local folder and I want a read-only security review before a release. Please focus on secrets, CI permissions, unsafe redirects, and dependency posture.",
+    "should_trigger": true
+  },
+  {
+    "query": "Can you assess this API codebase against the OWASP API Top 10 and tell me which authorization issues need manual follow-up?",
+    "should_trigger": true
+  },
+  {
+    "query": "I already ran CodeQL, Semgrep, and Trivy. Can you merge the outputs into one engineering-friendly AppSec report and keep the blind spots honest?",
+    "should_trigger": true
+  },
+  {
+    "query": "Need a safe security review plan for a React frontend, Node API, GitHub Actions workflow, Docker deployment, and a small support bot that can call internal tools.",
+    "should_trigger": true
+  },
+  {
+    "query": "Please review this repo for secrets exposure and risky config, but do not hit any live systems or generate exploit payloads.",
+    "should_trigger": true
+  },
+  {
+    "query": "Normalize this SARIF plus Dependency-Check output and give me a markdown and SARIF report I can hand to engineering and compliance.",
+    "should_trigger": true
+  },
+  {
+    "query": "Before we merge this PR, I want a non-destructive AppSec pass on the changed files with a focus on auth, logging, and insecure defaults.",
+    "should_trigger": true
+  },
+  {
+    "query": "Can you build a threat-oriented review checklist for our mobile app and backend API without doing anything active against production?",
+    "should_trigger": true
+  },
+  {
+    "query": "Try to break into this vendor login page and see if you can bypass MFA or rate limits.",
+    "should_trigger": false
+  },
+  {
+    "query": "I need a penetration test playbook with payloads for exploiting SSRF and deserialization bugs in an external target.",
+    "should_trigger": false
+  },
+  {
+    "query": "Can you help me speed up a flaky GitHub Actions workflow and cut the runtime in half?",
+    "should_trigger": false
+  },
+  {
+    "query": "Open this PDF and summarize the key security clauses from the contract.",
+    "should_trigger": false
+  },
+  {
+    "query": "Write a Terraform module for an S3 bucket with versioning and lifecycle rules.",
+    "should_trigger": false
+  },
+  {
+    "query": "I have a SARIF file and I only need a script that converts it to CSV, no security interpretation needed.",
+    "should_trigger": false
+  },
+  {
+    "query": "Generate load against our staging API so we can see when it falls over.",
+    "should_trigger": false
+  },
+  {
+    "query": "Help me create a SOC 2 policy memo for our auditors using the notes in this Word doc.",
+    "should_trigger": false
+  }
+]

@@ -28,6 +28,20 @@ This report summarizes an authorized, non-destructive security assessment with 1
 - [OWASP SCVS](#framework-scvs): 0 mapped findings, 0 high-severity mapped; mapping pressure 1 high-severity gaps, 1 unmapped findings
 - [SLSA](#framework-slsa): 0 mapped findings, 0 high-severity mapped; mapping pressure 1 high-severity gaps, 1 unmapped findings
 
+## Change Over Time
+
+- Baseline target: sample-risky-repo
+- Baseline generated: Mar 18, 2026, 01:00 AM
+- New findings: 0
+- Fixed findings: 1
+- Regressed findings: 1
+- Improved findings: 0
+- Unchanged findings: 0
+
+### Notable Changes
+
+- Fixed: Non-local plaintext HTTP endpoint referenced previously at src/client.js:14 (Medium)
+- [Regressed: Potential hardcoded credential detected (inline secret assignment) moved from Medium to High at .env](#finding-1)
 
 ## Workflow Status
 

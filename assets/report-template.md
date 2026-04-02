@@ -6,7 +6,7 @@
 - Target: [repository / service / application]
 - Surface type: [web / api / mobile / repo / iac / pipeline / mixed]
 - Assessment mode: authorized, non-destructive, evidence-based review
-- Standards applied: [OWASP / NIST / MASVS / SSDF / custom]
+- Standards applied: [CWE / OWASP / ASVS / NIST SSDF / CIS / SCVS / SLSA / MASVS / custom]
 - Overall posture: [short narrative]
 
 ## Scope and Constraints
@@ -18,6 +18,23 @@
 ## Methodology
 
 Describe the assessment approach in plain language. Note whether the work focused on code review, configuration review, dependency hygiene, CI/CD analysis, or limited runtime validation.
+
+## What Was Tested
+
+- Coverage areas: [themes actually reviewed]
+- Evidence sources: [native heuristic scan / external tools / analyst validation]
+- Blind spots: [what still requires runtime validation or manual follow-up]
+- SAMM maturity lens: [optional summary framing for SDLC and repo assessments]
+
+## Scan Telemetry
+
+- Scan depth: [quick / deep]
+- Files discovered: [count]
+- Files scanned: [count]
+- Bytes scanned: [count]
+- External findings imported: [count]
+- Skipped content: [support material / oversized / unreadable]
+- Elapsed time: [ms or human-readable duration]
 
 ## Attack Surface Summary
 
@@ -44,7 +61,7 @@ Describe the assessment approach in plain language. Note whether the work focuse
 - Weakness: [CWE]
 - Severity: [CVSS v4.0 string]
 - Confidence: [Low / Medium / High]
-- Framework mapping: [standard and control]
+- Framework mappings: [OWASP / ASVS / NIST / CIS / SCVS / SLSA as applicable]
 
 **Evidence**
 

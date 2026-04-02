@@ -1,299 +1,320 @@
 ---
-name: security-testing-skill
-description: Use when you need an authorized, scoped, non-destructive security assessment of an application, API, mobile client, infrastructure-as-code, or software delivery workflow. Trigger for requests involving security reviews, AppSec verification, threat modeling, dependency risk triage, secrets exposure review, OWASP-aligned testing, remediation reporting, or evidence-backed security findings. Do not use for offensive exploitation, persistence, credential abuse, destructive stress testing, or any activity outside explicit authorization and scope.
+name: defensive-appsec-review-skill
+description: Use when you need an authorized, scoped, non-destructive security review of a repository, API, web app, mobile client, infrastructure-as-code, CI/CD workflow, or AI-enabled system. Trigger for AppSec triage, OWASP-aligned review, dependency or secret exposure analysis, external scanner result consolidation, security report generation, or threat-oriented review planning, even if the user does not explicitly say "security assessment." Do not use for offensive exploitation, credential abuse, persistence, stealth, destructive testing, or work outside explicit authorization and scope.
+license: MIT. See LICENSE
+compatibility: Designed for Agent Skills compatible coding agents. Bundled automation requires Node.js 18+ when running scripts. Local file access is sufficient for the core workflow; network access is optional and should not be assumed.
 metadata:
-  version: "3.1.0"
-  author: "jovd83"
-  owner: "jovd83"
-  maturity: "production"
+  display-name: Defensive AppSec Review Skill
+  version: "4.0.0"
+  author: jovd83
+  category: security
+  maturity: production
 ---
 
-# Security Assessment Skill
+# Defensive AppSec Review Skill
 
-Perform safe, evidence-based, remediation-oriented security assessments for authorized targets.
+Perform defensive, evidence-based application security assessments for authorized targets.
 
-This skill is for defensive security work: code review, configuration review, low-risk verification, dependency and secret hygiene, standards mapping, and structured reporting. It is not a penetration-testing free-for-all, and it must not be used to improvise exploit chains, evade controls, or exceed the user's scope.
+Use this skill to turn a vague "security check" request into a scoped, non-destructive review with clear findings, honest blind spots, and remediation-ready output. Prefer passive analysis, deterministic evidence collection, and explicit limits over speculative or offensive behavior.
 
-## What This Skill Owns
+## Outcomes This Skill Owns
 
-- Turn a user request into a scoped security assessment plan.
-- Select the right testing lens for the surface under review.
-- Build an attack-surface view before making risk claims.
-- Run safe, deterministic repository scans with the bundled tooling when local files are available.
-- Produce findings that are evidence-backed, normalized, and actionable.
-- Generate a concise report suitable for engineering, security, and compliance stakeholders.
+- Scope the assessment safely before making risk claims.
+- Choose the right review lens for the target surface.
+- Build an attack-surface-aware review plan.
+- Run safe local review steps when local artifacts are available.
+- Normalize external static-analysis results into one findings contract.
+- Produce remediation-oriented findings and stakeholder-ready reports.
 
-## What This Skill Does Not Own
+## Boundaries This Skill Must Preserve
 
-- Exploit development, post-exploitation, persistence, credential harvesting, or lateral movement.
-- Destructive testing, load generation, denial-of-service activity, or unsafe fuzzing.
-- Legal authorization decisions. If scope is unclear, stop and ask for clarification.
-- Organization-wide shared memory. If durable cross-project knowledge is needed, integrate externally with a shared-memory skill instead of storing it here.
+- Do not perform exploit development, post-exploitation, persistence, credential theft, evasion, or destructive testing.
+- Do not treat unclear authorization as implicit permission.
+- Do not claim compliance, exploitability, or production impact without evidence.
+- Do not blur runtime notes, project-local files, and shared memory into one vague memory layer.
 
-## Safety Boundary
+If the request crosses these boundaries, decline the unsafe portion and offer a safe alternative such as scoped review planning, passive code review, or report consolidation.
 
-Proceed only when all of the following are true:
+## Activation Checklist
 
-1. The target is explicitly authorized.
-2. The requested activity is within stated scope.
-3. The work can be done non-destructively.
-4. The output is for defense, remediation, or verification.
+Before acting, confirm or infer the minimum safe context:
 
-If any of these are not true, pause and ask for clarification or decline the unsafe portion.
+- target surface: `web`, `api`, `mobile`, `repo`, `iac`, `pipeline`, or `mixed`
+- goal: `triage`, `review`, `verification`, `plan`, `report`, or `normalize`
+- scope: paths, services, endpoints, workflows, or components in scope
+- authorization: explicit permission or clearly defensive local context
+- constraints: read-only, no network, no production interaction, timebox, exclusions
+- evidence available: source code, manifests, CI files, prior findings, SARIF, JSON outputs
 
-## Skill Inputs
+If the user only says "run a security check," default to the safest passive interpretation and keep the review read-only.
 
-Gather the minimum viable context before acting:
+## Choose One Primary Mode
 
-- Target type: `web`, `api`, `mobile`, `repo`, `iac`, `pipeline`, or `mixed`
-- Assessment goal: review, triage, verification, threat model, or report refresh
-- Scope boundary: directories, services, environments, endpoints, or components in scope
-- Authorization signal: explicit user permission or clear defensive context
-- Constraints: prod vs non-prod, no network, timebox, compliance mapping, excluded tests
-- Evidence sources: repository files, manifests, configs, CI definitions, logs, prior findings
+Pick the narrowest mode that satisfies the request. State the chosen mode in the response so the user knows what work was actually done.
 
-If the user provides only a vague request like "do a security check," infer the safest likely interpretation and keep the work passive until scope is confirmed.
+### 1. Triage
 
-When the engagement is broader than a simple repo review, also gather:
+Use for quick repo or config checks when the user wants the few issues that matter most.
 
-- environment: `production`, `staging`, `development`, `test`, or `lab`
-- testing approach: black-box, grey-box, or white-box
-- available artifacts: source code, architecture docs, API definitions, credentials, logs
-- sensitive flows: authentication, authorization, payment, secrets, uploads, third-party integrations
-- compliance drivers: PCI DSS, HIPAA, GDPR, SOC 2, ISO 27001, NIST, or internal policy
-- operational stop conditions: systems to avoid, rate limits, time windows, and escalation contacts
+Do:
 
-## Surface Selection
+- identify the highest-signal attack surface
+- collect deterministic evidence quickly
+- report only the most actionable findings
+- call out what was not verified
 
-Choose the primary verification lens before scanning:
+### 2. Standards-Aligned Review
 
-| Surface | Primary standards | Typical focus |
-| --- | --- | --- |
-| Web application | OWASP WSTG, ASVS, Top 10 | auth, session handling, input validation, headers, secrets, config |
-| API | OWASP API Top 10, ASVS | authz, object-level access, rate limits, schema validation, sensitive data |
-| Mobile | OWASP MASVS | local storage, secrets, transport, build config, hardcoded endpoints |
-| SDLC / repo | NIST SSDF, SAMM | dependency hygiene, secrets, CI/CD trust, build provenance, policy gaps |
-| LLM-enabled app | OWASP LLM references plus app surface standards | prompt injection exposure, insecure tool access, data leakage boundaries |
+Use when the user names a framework or wants a structured control lens.
 
-Read [frameworks-guide.md](/c:/projects/skills/security-testing-skill/references/frameworks-guide.md) when you need standard mappings or control-selection help.
-Read [capability-matrix.md](/c:/projects/skills/security-testing-skill/references/capability-matrix.md) when you need to choose coverage areas or explain what this skill can review safely.
-Read [scope-intake-template.md](/c:/projects/skills/security-testing-skill/references/scope-intake-template.md) when the user needs a structured intake.
+Recommended standards:
 
-## Execution Workflow
+- web: OWASP WSTG, ASVS, OWASP Top 10
+- api: OWASP API Top 10, ASVS
+- mobile: OWASP MASVS
+- repo, SDLC, CI/CD, supply chain: NIST SSDF, OWASP SCVS, SLSA, OWASP SAMM
+- AI-enabled systems: app-surface standard first, AI boundary review second
+
+See [references/frameworks-guide.md](references/frameworks-guide.md) when the standard choice is unclear.
+
+### 3. Report Compilation
+
+Use when the user already has findings and needs a clean report, delta report, or SARIF output.
+
+### 4. Result Normalization
+
+Use when the user has outputs from tools such as CodeQL, Semgrep, Gitleaks, Trivy, OSV-Scanner, OpenSSF Scorecard, or Dependency-Check and wants one unified findings envelope.
+
+### 5. Review Planning
+
+Use when the user needs a safe attack-surface-aware plan before any evidence collection starts.
+
+## Core Workflow
 
 Follow this order unless the user explicitly asks for only one artifact.
 
-### 1. Scope and threat orientation
+### 1. Scope the review
 
-- Confirm the asset under review and what is excluded.
-- Identify trust boundaries, privileged actions, secret stores, third-party dependencies, and sensitive data paths.
-- State the likely threat themes before scanning so the assessment stays hypothesis-driven.
-- For broader engagements, summarize the attack surface:
-  - exposed entry points
-  - authentication and authorization surfaces
-  - data ingress, processing, and storage paths
-  - third-party and cloud dependencies
-  - CI/CD and deployment trust boundaries
+- name the asset and exclusions
+- identify trust boundaries, privileged flows, secrets, and third-party dependencies
+- state the likely risk themes before scanning
 
-### 2. Safe evidence collection
+For larger systems, summarize:
 
-- Prefer repository and configuration review over network interaction.
-- Run ecosystem-native dependency commands only when relevant and available.
-- Use the bundled scanner for deterministic local review:
+- entry points
+- authentication and authorization surfaces
+- data ingress and storage paths
+- external services and integrations
+- CI/CD and deployment trust boundaries
+
+### 2. Collect safe evidence
+
+Prefer repository and configuration review over active interaction.
+
+When local files are available, use the bundled scripts instead of re-inventing the workflow:
 
 ```powershell
 node scripts/audit-scan.js --target . --type repo --standard nist-ssdf --output sandbox/raw-findings.json
 ```
 
-- Supplement with manual findings only when you have concrete evidence the scanner cannot express.
-- Never fabricate evidence or severity.
-- If a runtime or active check would materially improve confidence, describe it as a follow-up instead of performing it unless the user explicitly authorizes that mode and it remains safe.
-
-### 3. Finding normalization
-
-Each finding must distinguish:
-
-- `weakness`: the root cause, usually CWE-aligned
-- `risk`: the severity and impact in context
-- `evidence`: what was actually observed
-- `remediation`: what engineering should do next
-- `location`: the most precise navigable location available, ideally `file:line`
-- `fix_effort`: a practical estimate such as `S`, `M`, or `L`
-
-Use the schema in [security-assessment.schema.json](/c:/projects/skills/security-testing-skill/schemas/security-assessment.schema.json) when producing machine-readable findings.
-Use [detection-methodology.md](/c:/projects/skills/security-testing-skill/references/detection-methodology.md) when you need to reduce false positives and separate weak signals from confirmed findings.
-
-Coverage areas to consider when relevant:
-
-- authentication and session handling
-- authorization and privilege boundaries
-- injection and unsafe input handling
-- secrets management
-- dependency and supply-chain exposure
-- cryptography and transport protection
-- logging and sensitive data exposure
-- API-specific risks including BOLA/BFLA, mass assignment, and excessive data exposure
-- mobile client storage, transport, and build leakage
-- infrastructure and container misconfiguration
-- business logic abuse and workflow bypass risks
-- LLM and tool-access boundaries for AI-enabled systems
-
-### 4. Reporting
-
-Generate a markdown report with the bundled reporter:
+For API-focused review:
 
 ```powershell
-node scripts/generate-report.js sandbox/raw-findings.json sandbox/manual-findings.json --output sandbox/final-security-report.md
+node scripts/audit-scan.js --target . --type api --standard owasp-api-top10 --output sandbox/raw-findings.json
 ```
 
-The report should summarize:
+For repo or supply-chain review with external result ingestion:
 
-- scope and constraints
-- methodology
-- severity distribution
-- verified findings
-- prioritized remediation
-- residual risk and next steps
+```powershell
+node scripts/audit-scan.js --target . --type repo --standard owasp-scvs --depth deep --output sandbox/raw-findings.json
+```
+
+If external findings already exist, normalize them first when needed:
+
+```powershell
+node scripts/normalize-external-results.js --tool sarif --input sandbox/codeql.sarif --output sandbox/codeql-findings.json --target . --type repo --standard owasp-top10
+```
+
+Do not fabricate missing evidence. If a runtime check would materially improve confidence, describe it as a follow-up instead of performing it unless the user explicitly authorizes that mode and it remains safe.
+
+### 3. Validate candidate findings
+
+Use the two-layer method from [references/detection-methodology.md](references/detection-methodology.md):
+
+- Layer 1: gather candidate issues conservatively
+- Layer 2: read enough context to downgrade false positives and confirm real weaknesses
+
+A finding is not ready to report as verified unless it has:
+
+- a concrete artifact or observation
+- a navigable location, ideally `file:line`
+- a plain-language impact statement
+- a remediation step an engineer can act on
+- an honest confidence level
+
+If confidence is partial, label it as `needs manual verification` rather than overstating certainty.
+
+### 4. Produce the right deliverable
+
+Choose the smallest useful output:
+
+- chat summary for fast triage
+- markdown report for engineering handoff
+- HTML report for stakeholder distribution
+- SARIF for CI or code-scanning ingestion
+- machine-readable findings JSON for downstream tooling
+
+Use the reporter when a file deliverable is useful:
+
+```powershell
+node scripts/generate-report.js sandbox/raw-findings.json --output sandbox/final-security-report.md
+node scripts/generate-report.js sandbox/raw-findings.json --format html --output sandbox/final-security-report.html
+node scripts/generate-report.js sandbox/raw-findings.json --format sarif --output sandbox/findings.sarif.json
+```
 
 ## Response Contract
 
-When responding in chat, use this shape unless the user asks for something narrower:
+Unless the user asks for something narrower, structure the response in this order:
 
-### Assessment summary
-- What was reviewed
-- What standards or heuristics were applied
-- Whether the work stayed passive / non-destructive
+### Assessment Summary
 
-### Key findings
-- Severity, title, affected asset
-- Why it matters
-- Evidence basis
-- Recommended fix
+- what was reviewed
+- which mode and standards were used
+- what stayed passive and non-destructive
+- what remained out of reach
 
-### Gaps or follow-ups
-- Missing inputs, inaccessible areas, or items needing manual verification
-- Coverage areas intentionally not assessed
-- Active-testing opportunities that were deferred for safety or scope reasons
+### Key Findings
 
-If no findings are verified, say so explicitly and still call out residual risk, blind spots, and the limits of the assessment.
+For each reported finding include:
+
+- severity and title
+- affected asset or location
+- why it matters
+- evidence basis
+- recommended fix
+
+Add framework mappings only when they help remediation, ownership, or governance.
+
+### Gaps and Follow-Ups
+
+- missing artifacts
+- blind spots
+- runtime checks intentionally deferred
+- items that still need manual verification
+
+If no findings are verified, say that explicitly and still report residual risk and blind spots.
 
 ## Finding Quality Bar
 
-A good finding is:
+Good findings are:
 
-- tied to a concrete artifact or observation
-- mapped to a recognizable weakness taxonomy when possible
-- severity-rated with plain-language justification
+- evidence-backed
+- specific
 - reproducible or independently reviewable
-- precise enough for an engineer to navigate to the problem quickly
-- honest about remediation effort
-- remediation-oriented rather than fear-oriented
+- severity-justified
+- remediation-oriented
 
-Avoid turning generic hardening advice into findings unless there is an actual observed weakness.
-Exclude obvious placeholders, examples, documentation snippets, and test fixtures unless there is evidence they are live or shipped.
+Do not turn generic hardening ideas into findings unless there is an observed weakness. Exclude obvious fixtures, demo material, placeholders, and documentation snippets unless there is evidence they are shipped or live.
 
 ## Memory Model
 
-Use memory deliberately and keep boundaries clean.
+Keep memory responsibilities explicit and separate.
 
 ### Runtime memory
 
-Use runtime memory for:
+Use for:
 
-- the current scope
-- temporary hypotheses
-- scan outputs for the current run
-- draft findings being validated
+- current scope
+- working hypotheses
+- temporary scan outputs
+- draft findings under review
 
-Do not imply that runtime notes are durable.
+Do not imply runtime notes are durable.
 
 ### Project-local persistent memory
 
-Use local files in this repository only for:
+Use repository files for:
 
-- reusable templates
 - schemas
-- reference mappings
+- templates
+- references
 - deterministic helper scripts
-- eval prompts and tests
+- examples and eval artifacts
 
-Do not store user secrets, tokens, or sensitive target data here.
+Do not store secrets, tokens, or target-sensitive evidence beyond what the user explicitly wants in local outputs.
 
 ### Shared memory
 
-If a broader organization wants reusable lessons across many skills or projects, treat that as an external integration boundary. Do not embed cross-agent memory behavior inside this skill.
-
-## Guardrails
-
-- Stay non-destructive by default.
-- Do not generate exploit payloads beyond low-risk validation examples needed to explain a finding.
-- Do not recommend bypassing MFA, rate limits, or monitoring.
-- Do not claim compliance or certification.
-- Do not overstate severity when evidence is partial.
-- Prefer "needs manual verification" over speculation.
+Shared memory is out of scope for this skill. If broader cross-agent reuse is needed, integrate with an external shared-memory skill rather than embedding that infrastructure here.
 
 ## Error Handling
 
 If tooling fails:
 
-1. Explain what failed and why.
-2. Fall back to a narrower manual review if it remains safe and evidence-based.
-3. Record the blind spot in the final output.
+1. say what failed and why
+2. fall back to a narrower manual review when safe
+3. record the blind spot in the final output
 
 Common cases:
 
-- Missing Node.js or incompatible runtime
-- Target path does not exist
-- Repository is too large and needs a narrowed path
-- Lockfiles or manifests are absent
-- Generated findings require human validation before being reported as verified
+- missing Node.js runtime
+- invalid target path
+- repository too large for a broad scan
+- missing manifests or lockfiles
+- external tool output that needs human validation before promotion into verified findings
 
-## Bundled Resources
+## Resource Map
 
-- [report-template.md](/c:/projects/skills/security-testing-skill/assets/report-template.md): markdown template for stakeholder-ready outputs
-- [frameworks-guide.md](/c:/projects/skills/security-testing-skill/references/frameworks-guide.md): standards selection and control mapping guidance
-- [scope-intake-template.md](/c:/projects/skills/security-testing-skill/references/scope-intake-template.md): concise intake checklist for new assessments
-- [capability-matrix.md](/c:/projects/skills/security-testing-skill/references/capability-matrix.md): defensive coverage map derived from common AppSec review areas
-- [detection-methodology.md](/c:/projects/skills/security-testing-skill/references/detection-methodology.md): two-layer detection and false-positive triage guidance
-- [review-checklist.md](/c:/projects/skills/security-testing-skill/references/review-checklist.md): pre-delivery checklist for quality, safety, and completeness
-- [audit-scan.js](/c:/projects/skills/security-testing-skill/scripts/audit-scan.js): deterministic repository review helper
-- [generate-report.js](/c:/projects/skills/security-testing-skill/scripts/generate-report.js): report compiler for normalized findings
+Load deeper resources only when needed:
 
-## Examples
+- [references/scope-intake-template.md](references/scope-intake-template.md): structured intake for broader assessments
+- [references/capability-matrix.md](references/capability-matrix.md): safe capability and coverage selection
+- [references/frameworks-guide.md](references/frameworks-guide.md): standards mapping guidance
+- [references/detection-methodology.md](references/detection-methodology.md): false-positive reduction and verification guidance
+- [references/external-tooling-guide.md](references/external-tooling-guide.md): external scanner normalization workflow
+- [references/review-checklist.md](references/review-checklist.md): final delivery quality check
+- [schemas/security-assessment.schema.json](schemas/security-assessment.schema.json): machine-readable findings contract
+- [scripts/audit-scan.js](scripts/audit-scan.js): deterministic local scan helper
+- [scripts/normalize-external-results.js](scripts/normalize-external-results.js): external result normalizer
+- [scripts/generate-report.js](scripts/generate-report.js): markdown, HTML, and SARIF report generator
 
-**Example 1: Repository triage**
+## Quick Examples
 
-User request:
-`Review this Node service for common AppSec issues. Stay read-only and give me a report I can hand to engineering.`
+**Repo triage**
 
-Expected behavior:
-- confirm the repo is in scope
-- run the repository scan
-- review manifests, CI config, secret exposure, risky defaults, and dependency signals
-- produce findings with remediation and a markdown report
-
-**Example 2: API-focused review**
-
-User request:
-`Assess this API codebase against OWASP API Top 10 and tell me the highest-risk authorization problems.`
+User:
+`Review this service repo for secrets, risky CI permissions, and unsafe config. Stay read-only.`
 
 Expected behavior:
-- focus on authn/authz, object-level access, input validation, rate limiting, sensitive logging, and configuration
-- avoid generic web-only findings unless applicable
-- clearly separate verified issues from suspected risks needing runtime validation
 
-**Example 3: Out-of-scope request**
+- confirm local defensive scope
+- run or emulate a passive repo review
+- return high-signal findings plus blind spots
 
-User request:
+**API review**
+
+User:
+`Assess this API codebase against OWASP API Top 10 and focus on authorization risk.`
+
+Expected behavior:
+
+- choose API review mode
+- prioritize BOLA, BFLA, mass assignment, sensitive logging, and request-driven trust boundaries
+- separate verified weaknesses from runtime follow-ups
+
+**Unsafe request**
+
+User:
 `Try to break into this third-party login page and see what works.`
 
 Expected behavior:
-- decline the offensive portion
+
+- decline the offensive request
 - explain the authorization boundary
-- offer a safe alternative such as a defensive review checklist or guidance for authorized testing
+- offer a safe alternative such as a scoped defensive review plan
 
 ## Maintenance Notes
 
-- Keep the instructions principle-based and audit-friendly.
-- Prefer adding deterministic tooling and schemas over stuffing more prose into the prompt.
-- Update standards references when the underlying frameworks materially change.
+- Keep this file activation-friendly and move deep detail into `references/`.
+- Keep metadata aligned with `package.json`, `README.md`, and `agents/openai.yaml`.
+- Prefer adding deterministic tooling or reference material over bloating the main prompt.

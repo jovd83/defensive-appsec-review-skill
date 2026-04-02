@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>__PAGE_TITLE__</title>
+  <style>
+    :root {
+      --bg: #f3ede2;
+      --paper: rgba(255, 252, 246, 0.94);
+      --panel: rgba(255, 255, 255, 0.72);
+      --ink: #17212b;
+      --muted: #5b6671;
+      --border: rgba(23, 33, 43, 0.12);
+      --shadow: 0 22px 60px rgba(21, 28, 35, 0.12);
+      --accent: #9d402d;
+      --accent-soft: rgba(157, 64, 45, 0.12);
+      --accent-secondary: #9e7a41;
+      --critical: #7a1f1f;
+      --critical-soft: rgba(122, 31, 31, 0.12);
+      --high: #9d402d;
+      --high-soft: rgba(157, 64, 45, 0.12);
+      --medium: #9e7a41;
+      --medium-soft: rgba(158, 122, 65, 0.14);
+      --low: #306657;
+      --low-soft: rgba(48, 102, 87, 0.14);
+      --info: #385a80;
+      --info-soft: rgba(56, 90, 128, 0.14);
+      --display-font: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      --body-font: "Aptos", "Segoe UI Variable Text", "Trebuchet MS", sans-serif;
+      --mono-font: "Cascadia Code", "Consolas", "SFMono-Regular", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--body-font);
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(158, 122, 65, 0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(56, 90, 128, 0.16), transparent 24%),
+        linear-gradient(180deg, #faf5eb 0%, var(--bg) 100%);
+      line-height: 1.6;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(23, 33, 43, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(23, 33, 43, 0.03) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.45), transparent 85%);
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 40px));
+      margin: 32px auto 56px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero,
+    .section,
+    .finding-card,
+    .empty-state {
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero {
+      overflow: hidden;
+      position: relative;
+      padding: 36px;
+      margin-bottom: 24px;
+      background:
+        linear-gradient(135deg, rgba(157, 64, 45, 0.1), transparent 52%),
+        linear-gradient(160deg, rgba(56, 90, 128, 0.1), transparent 62%),
+        var(--paper);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -60px;
+      top: -70px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(157, 64, 45, 0.24), transparent 70%);
+      filter: blur(10px);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: rgba(23, 33, 43, 0.06);
+      color: var(--muted);
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(157, 64, 45, 0.08);
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      margin: 0;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    h1,
+    h2 {
+      font-family: var(--display-font);
+    }
+
+    h1 {
+      max-width: 14ch;
+      font-size: clamp(2.35rem, 4vw, 4.4rem);
+      margin-bottom: 14px;
+    }
+
+    .hero p {
+      max-width: 70ch;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(23, 33, 43, 0.08);
+      background: rgba(255, 255, 255, 0.74);
+      color: var(--ink);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .chip-subtle {
+      background: rgba(23, 33, 43, 0.05);
+      font-weight: 500;
+    }
+
+    .hero-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(23, 33, 43, 0.08);
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .hero-footer strong {
+      color: var(--ink);
+    }
+
+    .section {
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .section-heading p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      max-width: 60ch;
+    }
+
+    .severity-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .severity-card {
+      padding: 16px 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(23, 33, 43, 0.08);
+      background: var(--panel);
+      min-height: 110px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .severity-card strong {
+      font-family: var(--display-font);
+      font-size: 2.1rem;
+    }
+
+    .severity-card-label {
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+    }
+
+    .severity-card-critical { background: linear-gradient(180deg, var(--critical-soft), rgba(255,255,255,0.8)); }
+    .severity-card-high { background: linear-gradient(180deg, var(--high-soft), rgba(255,255,255,0.8)); }
+    .severity-card-medium { background: linear-gradient(180deg, var(--medium-soft), rgba(255,255,255,0.8)); }
+    .severity-card-low { background: linear-gradient(180deg, var(--low-soft), rgba(255,255,255,0.8)); }
+    .severity-card-informational { background: linear-gradient(180deg, var(--info-soft), rgba(255,255,255,0.8)); }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+    }
+
+    .panel {
+      border: 1px solid rgba(23, 33, 43, 0.08);
+      border-radius: 20px;
+      background: var(--panel);
+      padding: 20px;
+    }
+
+    .panel h3 {
+      font-size: 1.2rem;
+      margin-bottom: 14px;
+    }
+
+    .overview-list {
+      margin: 0;
+    }
+
+    .overview-row {
+      display: grid;
+      grid-template-columns: 160px minmax(0, 1fr);
+      gap: 14px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(23, 33, 43, 0.07);
+    }
+
+    .overview-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .overview-row dt {
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .overview-row dd {
+      margin: 0;
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .coverage-list,
+    .reference-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .coverage-item,
+    .reference-item {
+      position: relative;
+      padding-left: 20px;
+      color: var(--ink);
+    }
+
+    .coverage-item::before,
+    .reference-item::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 11px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-secondary);
+      box-shadow: 0 0 0 5px rgba(158, 122, 65, 0.1);
+    }
+
+    .anchor-link {
+      color: var(--accent);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .anchor-link:hover,
+    .anchor-link:focus-visible {
+      text-decoration: underline;
+    }
+
+    .anchor-chip {
+      text-decoration: none;
+    }
+
+    .matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+      overflow: hidden;
+      border-radius: 18px;
+      border: 1px solid rgba(23, 33, 43, 0.08);
+      background: rgba(255, 255, 255, 0.76);
+    }
+
+    .matrix-table th,
+    .matrix-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(23, 33, 43, 0.08);
+      text-align: left;
+    }
+
+    .matrix-table th {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      background: rgba(23, 33, 43, 0.04);
+    }
+
+    .matrix-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .framework-drilldown-stack {
+      display: grid;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .framework-drilldown-card h4 {
+      margin: 0 0 12px;
+      font-size: 1rem;
+    }
+
+    .drilldown-columns {
+      align-items: flex-start;
+    }
+
+    .drilldown-empty {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .findings-stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .finding-card {
+      padding: 26px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .finding-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 8px;
+      background: var(--accent);
+    }
+
+    .finding-card.severity-critical::before { background: var(--critical); }
+    .finding-card.severity-high::before { background: var(--high); }
+    .finding-card.severity-medium::before { background: var(--medium); }
+    .finding-card.severity-low::before { background: var(--low); }
+    .finding-card.severity-informational::before { background: var(--info); }
+
+    .finding-kicker {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .finding-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .finding-title-row h3 {
+      font-size: 1.4rem;
+      max-width: 42ch;
+    }
+
+    .severity-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 9px 13px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      white-space: nowrap;
+    }
+
+    .severity-pill-critical { background: var(--critical-soft); color: var(--critical); }
+    .severity-pill-high { background: var(--high-soft); color: var(--high); }
+    .severity-pill-medium { background: var(--medium-soft); color: #7b5c2d; }
+    .severity-pill-low { background: var(--low-soft); color: var(--low); }
+    .severity-pill-informational { background: var(--info-soft); color: var(--info); }
+
+    .definition-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 0 0 20px;
+    }
+
+    .definition {
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(23, 33, 43, 0.06);
+    }
+
+    .definition dt {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .definition dd {
+      margin: 0;
+      color: var(--ink);
+      word-break: break-word;
+    }
+
+    .finding-block {
+      margin-top: 18px;
+    }
+
+    .finding-block h4 {
+      margin-bottom: 10px;
+      font-size: 1rem;
+    }
+
+    .finding-block p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .evidence-block {
+      margin: 0;
+      padding: 16px;
+      border-radius: 16px;
+      background: #181d24;
+      color: #f5efe4;
+      font-family: var(--mono-font);
+      font-size: 0.88rem;
+      overflow: auto;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .finding-two-up {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .empty-state {
+      padding: 34px;
+      text-align: center;
+      background:
+        linear-gradient(135deg, rgba(48, 102, 87, 0.12), transparent 56%),
+        var(--paper);
+    }
+
+    .empty-state-kicker {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .empty-state h3 {
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+    }
+
+    .empty-state p {
+      margin: 0 auto;
+      max-width: 56ch;
+      color: var(--muted);
+    }
+
+    .footer-note {
+      color: var(--muted);
+      margin: 0;
+      max-width: 72ch;
+    }
+
+    @media (max-width: 960px) {
+      .severity-grid,
+      .two-column,
+      .definition-grid,
+      .finding-two-up {
+        grid-template-columns: 1fr;
+      }
+
+      .finding-title-row,
+      .hero-footer,
+      .section-heading {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        width: min(100% - 24px, 1180px);
+        margin: 12px auto 32px;
+      }
+
+      .hero,
+      .section,
+      .finding-card,
+      .empty-state {
+        border-radius: 20px;
+      }
+
+      .hero,
+      .section,
+      .finding-card {
+        padding: 22px;
+      }
+
+      .overview-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+      }
+
+      body::before,
+      .hero::after {
+        display: none;
+      }
+
+      .page {
+        width: 100%;
+        margin: 0;
+      }
+
+      .hero,
+      .section,
+      .finding-card,
+      .empty-state {
+        box-shadow: none;
+        background: #ffffff;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="eyebrow">Security Assessment Brief</div>
+      <h1>__REPORT_TITLE__</h1>
+      <p>__REPORT_SUMMARY__</p>
+      <div class="chip-row">__META_CHIPS__</div>
+      <div class="hero-footer">
+        <span><strong>Format:</strong> Professional HTML report</span>
+        <span><strong>Generated:</strong> __GENERATED_AT__</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <div>
+          <h2>Priority Trio</h2>
+          <p>The three fastest signals for triage: overall severity pressure, the dominant risk topic, and the framework lens with the strongest exposure or gap pressure.</p>
+        </div>
+      </div>
+      <div class="panel">
+        <ul class="coverage-list">__PRIORITY_TRIO_ITEMS__</ul>
+      </div>
+      <div class="panel" style="margin-top: 18px;">
+        <h3>Recommended First Action</h3>
+        <ul class="coverage-list">__RECOMMENDED_FIRST_ACTION_ITEMS__</ul>
+      </div>
+      <div class="panel" style="margin-top: 18px;">
+        <h3>Why This Is First</h3>
+        <ul class="coverage-list">__WHY_THIS_IS_FIRST_ITEMS__</ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <div>
+          <h2>Severity Snapshot</h2>
+          <p>A quick risk overview to orient engineering, security, and compliance readers before diving into individual findings.</p>
+        </div>
+      </div>
+      <div class="severity-grid">__SEVERITY_CARDS__</div>
+    </section>
+
+    __CHANGE_OVER_TIME_SECTION__
+
+    <section class="section">
+      <div class="section-heading">
+        <div>
+          <h2>Workflow Status</h2>
+          <p>This section summarizes remediation state, ownership, and due-date pressure so the report can support follow-up as well as assessment.</p>
+        </div>
+      </div>
+      <div class="two-column">
+        <div class="panel">
+          <h3>Status Summary</h3>
+          <ul class="coverage-list">__WORKFLOW_SUMMARY_ITEMS__</ul>
+        </div>
+        <div class="panel">
+          <h3>Ownership and Due Dates</h3>
+          <ul class="coverage-list">__WORKFLOW_OWNERSHIP_ITEMS__</ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <div>
+          <h2>Scope and Coverage</h2>
+          <p>The template keeps methodology, assessed themes, and declared blind spots in one fixed place so reports stay comparable from run to run.</p>
+        </div>
+      </div>
+      <div class="two-column">
+        <div class="panel">
+          <h3>Assessment Overview</h3>
+          <dl class="overview-list">__OVERVIEW_ROWS__</dl>
+        </div>
+        <div class="panel">
+          <h3>Assessed Themes</h3>
+          <ul class="coverage-list">__COVERAGE_ITEMS__</ul>
+        </div>
+      </div>
+      <div class="panel" style="margin-top: 18px;">
+        <h3>Top Risk Categories</h3>
+        <ul class="coverage-list">__TOP_RISK_CATEGORY_ITEMS__</ul>
+      </div>
+      <div class="panel" style="margin-top: 18px;">
+        <h3>Top Risk Frameworks</h3>
+        <ul class="coverage-list">__TOP_RISK_FRAMEWORK_ITEMS__</ul>
+      </div>
+      <div class="panel" style="margin-top: 18px;">
+        <h3>Manual Follow-up Needed</h3>
+        <ul class="coverage-list">__BLIND_SPOT_ITEMS__</ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <div>
+          <h2>What Was Tested</h2>
+          <p>This overview translates the scan inputs and observed evidence into a concise statement of what the assessment actually exercised.</p>
+        </div>
+      </div>
+      <div class="two-column">
+        <div class="panel">
+          <h3>Tested Scope</h3>
+          <ul class="coverage-list">__TESTED_SCOPE_ITEMS__</ul>
+        </div>
+        <div class="panel">
+          <h3>Test Methods and Evidence</h3>
+          <ul class="coverage-list">__TEST_METHOD_ITEMS__</ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <div>
+          <h2>Dependency and Source Posture</h2>
+          <p>This section inventories observed libraries, tools, and report sources. Unknown means insufficient evidence, not implicit approval or rejection.</p>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Posture Summary</h3>
+        <ul class="coverage-list">__COMPONENT_POSTURE_SUMMARY_ITEMS__</ul>
+      </div>
+      <div class="panel" style="margin-top: 18px;">
+        <h3>Posture Table</h3>
+        __COMPONENT_POSTURE_TABLE__
+      </div>
+      <div class="panel" style="margin-top: 18px;">
+        <h3>Component Follow-up</h3>
+        <ul class="coverage-list">__COMPONENT_POSTURE_FOLLOWUP_ITEMS__</ul>
+      </div>
+    </section>
+
+    <section class="section" id="category-browsing">
+      <div class="section-heading">
+        <div>
+          <h2>Category Browsing</h2>
+          <p>This section groups findings by security category so you can review the report by topic instead of only by severity or framework.</p>
+        </div>
+      </div>
+      <div class="two-column">
+        <div class="panel">
+          <h3>Category Coverage</h3>
+          <ul class="coverage-list">__CATEGORY_COVERAGE_ITEMS__</ul>
+        </div>
+        <div class="panel">
+          <h3>Category Posture</h3>
+          <ul class="coverage-list">__CATEGORY_POSTURE_ITEMS__</ul>
+        </div>
+      </div>
+      <div class="framework-drilldown-stack">__CATEGORY_DRILLDOWN__</div>
+    </section>
+
+    <section class="section" id="framework-coverage">
+      <div class="section-heading">
+        <div>
+          <h2>Framework Coverage</h2>
+          <p>This section shows how consistently the findings were mapped across governance and engineering frameworks so coverage gaps are visible at a glance.</p>
+        </div>
+      </div>
+      <div class="two-column">
+        <div class="panel">
+          <h3>Mapping Coverage</h3>
+          <ul class="coverage-list">__FRAMEWORK_COVERAGE_ITEMS__</ul>
+        </div>
+        <div class="panel">
+          <h3>Mapping Posture</h3>
+          <ul class="coverage-list">__FRAMEWORK_POSTURE_ITEMS__</ul>
+        </div>
+      </div>
+      <div class="panel" style="margin-top: 18px;">
+        <h3>Mapping Provenance</h3>
+        <ul class="coverage-list">__FRAMEWORK_PROVENANCE_ITEMS__</ul>
+      </div>
+      <div class="panel" style="margin-top: 18px;">
+        <h3>Priority Mapping Gaps</h3>
+        <ul class="coverage-list">__FRAMEWORK_GAP_ITEMS__</ul>
+      </div>
+      <div class="panel" style="margin-top: 18px;">
+        <h3>Severity by Framework</h3>
+        __FRAMEWORK_MATRIX__
+      </div>
+      <div class="framework-drilldown-stack">__FRAMEWORK_DRILLDOWN__</div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <div>
+          <h2>Scan Telemetry</h2>
+          <p>This section shows how much content the scanner actually processed so fast runs feel measurable rather than hand-wavy.</p>
+        </div>
+      </div>
+      <div class="two-column">
+        <div class="panel">
+          <h3>Processing Summary</h3>
+          <ul class="coverage-list">__TELEMETRY_SUMMARY_ITEMS__</ul>
+        </div>
+        <div class="panel">
+          <h3>Skips and Finding Mix</h3>
+          <ul class="coverage-list">__TELEMETRY_DETAIL_ITEMS__</ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <div>
+          <h2>Findings</h2>
+          <p>Each finding is rendered in the same structured card layout to keep evidence, impact, remediation, and provenance easy to review.</p>
+        </div>
+      </div>
+      <div class="findings-stack">__FINDINGS_HTML__</div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <div>
+          <h2>Recommended Next Steps</h2>
+          <p>Use this section as the action list for follow-up verification, engineering triage, and remediation planning.</p>
+        </div>
+      </div>
+      <div class="two-column">
+        <div class="panel">
+          <h3>Action Queue</h3>
+          <ul class="coverage-list">__NEXT_STEPS__</ul>
+        </div>
+        <div class="panel">
+          <h3>Residual Risk and Limitations</h3>
+          <p class="footer-note">__LIMITATIONS__</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

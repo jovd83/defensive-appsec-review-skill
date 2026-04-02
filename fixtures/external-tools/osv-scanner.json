@@ -1,0 +1,24 @@
+{
+  "results": [
+    {
+      "packages": [
+        {
+          "package": {
+            "name": "requests",
+            "version": "2.19.0"
+          },
+          "vulnerabilities": [
+            {
+              "id": "GHSA-9wx4-h78v-vm56",
+              "summary": "Requests contains a known issue.",
+              "details": "An outdated dependency version is affected.",
+              "database_specific": {
+                "severity": "HIGH"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

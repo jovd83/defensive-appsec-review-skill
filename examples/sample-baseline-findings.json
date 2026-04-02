@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "target": "sample-risky-repo",
+    "target_surface": "repo",
+    "standard": "nist-ssdf",
+    "standard_family": "nist-ssdf",
+    "coverage_areas": [
+      "secrets exposure and dependency inventory"
+    ],
+    "blind_spots": [
+      "runtime exploitability still requires validation"
+    ],
+    "source_tools": [
+      "native-heuristic-scan"
+    ],
+    "timestamp": "2026-03-18T00:00:00.000Z",
+    "generated_by": "defensive-appsec-review-skill/examples",
+    "notes": "Illustrative baseline for change-over-time reporting"
+  },
+  "findings": [
+    {
+      "title": "Potential hardcoded credential detected (inline secret assignment)",
+      "asset": ".env",
+      "location": ".env",
+      "category": "Credential Management",
+      "cwe": "CWE-798: Use of Hard-coded Credentials",
+      "cvss_v4": "5.4 (Medium)",
+      "confidence": "Medium",
+      "verification_tier": "heuristic-static",
+      "source_tool": "native-heuristic-scan",
+      "evidence": "Matched inline secret assignment pattern in .env.",
+      "reproduction_steps": "1. Open .env.\n2. Review the committed secret-like value.",
+      "business_impact": "Stored credentials in source remain exposed to anyone with repository access.",
+      "remediation": "Move credentials to a secret manager and rotate any exposed values.",
+      "fix_effort": "M"
+    },
+    {
+      "title": "Non-local plaintext HTTP endpoint referenced",
+      "asset": "src/client.js",
+      "location": "src/client.js:14",
+      "category": "Transport Security",
+      "cwe": "CWE-319: Cleartext Transmission of Sensitive Information",
+      "cvss_v4": "5.8 (Medium)",
+      "confidence": "Medium",
+      "verification_tier": "heuristic-static",
+      "source_tool": "native-heuristic-scan",
+      "evidence": "Found hardcoded http:// reference in client configuration.",
+      "reproduction_steps": "1. Open src/client.js.\n2. Review the hardcoded endpoint.",
+      "business_impact": "Plaintext transport can expose data in transit.",
+      "remediation": "Migrate the endpoint to HTTPS and reject insecure transport in configuration.",
+      "fix_effort": "S"
+    }
+  ]
+}

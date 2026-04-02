@@ -1,4 +1,11 @@
 {
   "name": "sample-risky-repo",
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "dependencies": {
+    "express": "^4.21.0",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
 }

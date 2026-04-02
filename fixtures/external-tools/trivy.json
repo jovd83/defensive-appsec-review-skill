@@ -1,0 +1,43 @@
+{
+  "Results": [
+    {
+      "Target": "package-lock.json",
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2024-9999",
+          "PkgName": "lodash",
+          "InstalledVersion": "4.17.20",
+          "FixedVersion": "4.17.21",
+          "Severity": "HIGH",
+          "Title": "Prototype pollution in lodash",
+          "Description": "A known vulnerability affects lodash.",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2024-9999",
+          "CVSS": {
+            "nvd": {
+              "V3Score": 8.1
+            }
+          }
+        }
+      ],
+      "Misconfigurations": [
+        {
+          "ID": "AVD-KSV-0041",
+          "Title": "Container is running as root",
+          "Description": "Running containers as root expands blast radius.",
+          "Message": "Container should not run as root.",
+          "Resolution": "Set a non-root user in the container spec.",
+          "Severity": "MEDIUM",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-ksv-0041"
+        }
+      ],
+      "Secrets": [
+        {
+          "RuleID": "aws-access-key-id",
+          "Title": "AWS access key detected",
+          "StartLine": 3,
+          "Match": "AKIA****************"
+        }
+      ]
+    }
+  ]
+}

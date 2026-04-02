@@ -1,0 +1,12 @@
+[
+  {
+    "Description": "Generic API key detected",
+    "File": "src/config.js",
+    "StartLine": 12,
+    "RuleID": "generic-api-key",
+    "Tags": [
+      "key",
+      "api"
+    ]
+  }
+]

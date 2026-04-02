@@ -1,286 +1,258 @@
-# Security Assessment Skill
+# Defensive AppSec Review Skill
 
-Version: `3.1.0`
-Author: `jovd83`
-License: `MIT`
+[![Version](https://img.shields.io/badge/version-4.0.0-blue)](https://github.com/jovd83/defensive-appsec-review-skill)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+[![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Tests](https://img.shields.io/badge/tests-passing-brightgreen)](https://github.com/jovd83/defensive-appsec-review-skill)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=flat&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/jovd83)
 
-An AgentSkill for authorized, non-destructive, evidence-based application security assessments.
+An enterprise-grade Agent Skill for authorized, non-destructive application security review.
 
-This repository packages a reusable skill plus lightweight tooling for defensive review workflows across repositories, APIs, mobile projects, infrastructure-as-code, and SDLC surfaces. It is designed for maintainers who want a clear operational boundary, deterministic helper scripts, and outputs that engineering teams can act on quickly.
+This repository packages a reusable `SKILL.md`, deterministic helper scripts, references, schema, fixtures, and tests for defensive AppSec workflows. It is designed for engineers, security reviewers, and maintainers who need fast, evidence-based review outputs without drifting into offensive or unsafe behavior.
 
-## What This Skill Is
+## Why This Repository Exists
 
-- A scoped defensive security-review skill
-- A standards-aware prompt package aligned to common AppSec frameworks
-- A small toolkit for repository scanning and markdown report generation
-- A GitHub-friendly starting point for maintainable, auditable skill distribution
+Many security-review prompts fail in one of two ways:
 
-## What This Skill Is Not
+- they are too vague to produce repeatable, auditable output
+- they overreach into offensive behavior, speculation, or noisy findings
 
-- An offensive security framework
-- An exploit-development toolkit
-- A replacement for full manual penetration testing
-- A shared-memory or cross-agent infrastructure layer
+This skill is built to avoid both. It gives compatible coding agents a clear defensive operating boundary, a practical workflow for passive review, and tooling for normalized findings plus stakeholder-ready reporting.
 
-## Repository Layout
+## What The Skill Does
+
+- scopes authorized security review requests safely
+- supports repo, API, web, mobile, IaC, pipeline, and mixed-system reviews
+- chooses an AppSec lens such as OWASP, ASVS, NIST SSDF, SCVS, or SLSA
+- runs deterministic local review steps through bundled Node scripts
+- normalizes external-tool outputs into one findings envelope
+- generates markdown, HTML, and SARIF deliverables
+
+## What It Does Not Do
+
+- offensive exploitation or post-exploitation
+- credential abuse or persistence
+- destructive load, fuzzing, or denial-of-service activity
+- implicit authorization decisions
+- shared-memory infrastructure across unrelated projects
+
+## Repository Structure
 
 ```text
-security-testing-skill/
-|-- .github/
-|-- agents/
-|-- assets/
-|-- evals/
-|-- examples/
-|-- fixtures/
-|-- references/
-|-- schemas/
-|-- scripts/
-|-- tests/
+defensive-appsec-review-skill/
+|-- .github/                 GitHub automation and templates
+|-- agents/                  Agent-facing metadata
+|-- assets/                  Shared report templates
+|-- evals/                   Skill and tooling evaluation artifacts
+|-- examples/                Example findings and generated reports
+|-- fixtures/                Deterministic sample inputs for tests
+|-- references/              Deep guidance loaded on demand
+|-- schemas/                 Machine-readable response contract
+|-- scripts/                 Deterministic helper tooling
+|-- tests/                   Node-based validation suite
 |-- CHANGELOG.md
 |-- CONTRIBUTING.md
 |-- LICENSE
 |-- README.md
-|-- SKILL.md
-`-- package.json
+|-- SECURITY.md
+`-- SKILL.md
 ```
 
-## Package Metadata
+## Skill Contract
 
-- Skill name: `security-testing-skill`
-- Display name: `Security Assessment Skill`
-- Version: `3.1.0`
-- Author: `jovd83`
-- License: `MIT`
-- OpenAI metadata file: [`agents/openai.yaml`](./agents/openai.yaml)
+The authoritative skill instructions live in [SKILL.md](./SKILL.md).
 
-## Responsibilities
+The skill is intentionally structured for progressive disclosure:
 
-The skill itself is responsible for:
+- `SKILL.md` contains only activation-time instructions and the operational workflow
+- `references/` holds deeper guidance that should be loaded only when needed
+- `scripts/` contains deterministic helpers that reduce repeated agent work
 
-- clarifying scope
-- selecting the right assessment lens
-- building an attack-surface-aware review plan
-- running safe local review steps
-- normalizing findings
-- producing remediation-focused output
+This keeps the activation surface focused while preserving a robust implementation layer.
 
-Related but separate concepts:
+## Installation
 
-- shared memory across many skills or teams
-- organization-wide policy engines
-- live DAST, fuzzing, or active penetration testing platforms
+### Agent Skills compatible agents
 
-Those are intentionally out of scope here and should stay external integrations, not implicit behavior inside this repository.
+Install the repository so the agent can see the skill folder containing `SKILL.md`.
 
-## Included Tooling
+Typical local installation:
 
-### `scripts/audit-scan.js`
+```text
+<skills-root>/defensive-appsec-review-skill/
+```
 
-Performs deterministic, read-only repository analysis and emits normalized findings JSON. Current checks include:
+The exact skills root depends on the host product. The skill itself does not require a custom installer.
 
-- hardcoded credential patterns
-- risky `.env` usage
-- wildcard CORS and insecure transport references
-- weak cookie configuration hints
-- dangerous CI/CD permission patterns
-- container and IaC hygiene signals
-- dangerous code patterns such as `eval`, unsafe HTML sinks, shell-enabled subprocess usage, insecure JWT handling, Python pickle deserialization, unsafe YAML loading, Java `Runtime.exec`, and SQL string concatenation hints
-- framework and deployment misconfiguration signals such as Flask debug mode, Django `DEBUG=True`, Spring actuator overexposure, browser token storage in `localStorage`, TLS verification bypasses, Kubernetes privileged containers, and Kubernetes `hostPath` mounts
-- dependency manifest discovery and basic ecosystem context
+### Validate the package before publishing
 
-This script is conservative by design. It produces candidate findings that still benefit from human validation.
+Run:
 
-### `scripts/generate-report.js`
+```powershell
+npm run validate
+```
 
-Combines one or more JSON findings files into either:
-
-- stakeholder-friendly markdown reports
-- SARIF-style JSON output for CI and code-scanning ingestion
-
-### `scripts/run-local-evals.js`
-
-Runs a deterministic local evaluation suite for the bundled tooling and writes grading plus benchmark artifacts into a sibling workspace. This does not replace model-based skill benchmarking, but it does give the repository a repeatable offline eval loop for scanner and report quality.
-
-Current output workspace:
-
-- [`security-testing-skill-workspace/local-iteration-1`](../security-testing-skill-workspace/local-iteration-1)
-
-Generated artifacts include:
-
-- `outputs/` files for each eval
-- `eval_metadata.json`
-- `grading.json`
-- `timing.json`
-- `benchmark.json`
-- `benchmark.md`
-
-## Strengthening Ideas Borrowed From Other Security Skills
-
-After reviewing several published security-auditor skills and broader cybersecurity skill packs, this repository explicitly incorporates the strongest compatible patterns:
-
-- two-layer detection to reduce false positives before reporting
-- precise locations and engineer-friendly remediation effort estimates
-- stronger emphasis on dependency, secret, and code-level review instead of vague security scanning
-- explicit positioning for pre-PR review, pre-release audit, and CI gate use cases
-
-Ideas intentionally left out:
-
-- exploit execution or persistence workflows
-- overly broad compliance-certification claims
-- giant checklist sprawl without a deterministic implementation path
-- framework or tool assumptions the repository does not actually bundle
-
-## Incorporated Capability Areas
-
-This version also integrates the strongest defensive-review capabilities from the external skeleton repository you pointed me to, reshaped into a safer and more maintainable skill boundary:
-
-- broader intake for scope, authorization, environment, and compliance drivers
-- attack-surface-oriented discovery before finding generation
-- richer capability coverage across web, API, mobile, repo, container, cloud, and AI-enabled systems
-- checklist-driven delivery quality
-- clearer distinction between passive review, deferred active checks, and out-of-scope offensive work
-
-Capabilities intentionally not imported:
-
-- exploit frameworks and offensive tooling assumptions
-- destructive or aggressive testing modes
-- social engineering and physical testing flows
-- zero-day detection claims that the repo cannot support credibly
+This repository also aligns its frontmatter and metadata to the published Agent Skills format. If you use the broader Agent Skills toolchain, you can additionally validate with the official tools from `agentskills.io`.
 
 ## Quick Start
 
-### 0. Inspect the packaged metadata
-
-The core metadata surfaces for this repository are:
-
-- [`SKILL.md`](./SKILL.md)
-- [`agents/openai.yaml`](./agents/openai.yaml)
-- [`package.json`](./package.json)
-
-### 1. Run the scanner
+### 1. Run a passive repo scan
 
 ```powershell
 node scripts/audit-scan.js --target . --type repo --standard nist-ssdf --output sandbox/raw-findings.json
 ```
 
-### 2. Optionally add manual findings
-
-Create a JSON file shaped like [`schemas/security-assessment.schema.json`](./schemas/security-assessment.schema.json) if you need to add analyst-confirmed findings the scanner cannot express.
-
-### 3. Generate a report
+### 2. Run a deeper review with external results
 
 ```powershell
-node scripts/generate-report.js sandbox/raw-findings.json sandbox/manual-findings.json --output sandbox/final-security-report.md
+node scripts/audit-scan.js --target . --type repo --standard owasp-scvs --depth deep --deep-inputs sarif=sandbox/semgrep.sarif,trivy=sandbox/trivy.json --output sandbox/deep-findings.json
 ```
 
-### 4. Generate SARIF-style output for CI consumers
+### 3. Normalize an external tool result
 
 ```powershell
+node scripts/normalize-external-results.js --tool sarif --input sandbox/codeql.sarif --output sandbox/codeql-findings.json --target . --type repo --standard owasp-top10
+```
+
+### 4. Generate a report
+
+```powershell
+node scripts/generate-report.js sandbox/raw-findings.json --output sandbox/final-security-report.md
+node scripts/generate-report.js sandbox/raw-findings.json --format html --output sandbox/final-security-report.html
 node scripts/generate-report.js sandbox/raw-findings.json --format sarif --output sandbox/findings.sarif.json
 ```
 
-### 5. Run the deterministic local eval harness
+### 5. Run the local deterministic eval harness
 
 ```powershell
 npm run eval:local
 ```
 
-This writes benchmark and grading artifacts into the sibling workspace directory:
+By default this writes into a sibling workspace directory:
 
 ```text
-../security-testing-skill-workspace/local-iteration-1/
+../defensive-appsec-review-skill-workspace/local-iteration-1/
 ```
 
-## Skill Usage Guidance
+You can override the destination and iteration label:
 
-Use this skill for prompts such as:
+```powershell
+node scripts/run-local-evals.js --workspace ..\defensive-appsec-review-skill-workspace --iteration local-iteration-2
+```
 
-- "Review this repo for security issues and keep it read-only."
-- "Assess this API codebase against OWASP API Top 10."
-- "Check our CI/CD definitions for secrets handling and risky permissions."
-- "Turn these raw findings into an engineering-ready security report."
-- "Run a pre-PR security review and highlight the few issues that matter most."
-- "Use this as a CI gate for dependency, secret, and risky-code checks."
+## Core Tooling
 
-Do not use it for:
+### `scripts/audit-scan.js`
 
-- unauthorized testing
-- exploitation of third-party targets
-- persistence or evasion techniques
-- destructive load or denial-of-service activity
+Read-only repository scanner that emits normalized findings JSON.
 
-## Installation-Friendly Notes
+Current coverage includes:
 
-If you publish or package this repository, keep these files aligned:
+- secrets exposure
+- dangerous code patterns
+- insecure defaults and transport issues
+- CI/CD permission and trust-boundary issues
+- container and IaC hygiene signals
+- API and authz-adjacent heuristics
+- dependency manifest discovery and scan telemetry
 
-- [`SKILL.md`](./SKILL.md) for the primary skill instructions and trigger description
-- [`agents/openai.yaml`](./agents/openai.yaml) for OpenAI-facing display metadata
-- [`README.md`](./README.md) for GitHub-facing documentation
+### `scripts/normalize-external-results.js`
 
-Version and author values should stay consistent across all three.
+Normalizes results from:
 
-## Reference Pack
+- SARIF
+- Gitleaks
+- Trivy
+- OSV-Scanner
+- OpenSSF Scorecard
+- OWASP Dependency-Check
 
-- [`references/scope-intake-template.md`](./references/scope-intake-template.md)
-- [`references/capability-matrix.md`](./references/capability-matrix.md)
-- [`references/frameworks-guide.md`](./references/frameworks-guide.md)
-- [`references/detection-methodology.md`](./references/detection-methodology.md)
-- [`references/review-checklist.md`](./references/review-checklist.md)
+### `scripts/generate-report.js`
 
-## Memory Architecture
+Builds:
 
-This repository intentionally uses a simple model:
+- markdown reports
+- HTML reports
+- SARIF output
+- baseline-vs-current delta views
 
-- Runtime memory: current scope, active hypotheses, scan outputs, draft findings
-- Project-local persistent memory: templates, schemas, scripts, evals, references in this repo
-- Shared memory: out of scope here; integrate with an external shared-memory skill only when needed
+### `scripts/run-local-evals.js`
 
-Nothing in this repository automatically promotes runtime observations into persistent or shared memory.
+Runs deterministic offline validation of the bundled tooling and writes benchmark-style artifacts to a workspace directory.
 
-## Quality and Validation
+## Findings Contract
 
-The repo includes:
+Machine-readable findings use [schemas/security-assessment.schema.json](./schemas/security-assessment.schema.json).
 
-- a JSON schema for findings envelopes
-- example eval prompts for skill review
-- fixtures and examples for scanner/report behavior
-- Node-based tests for the bundled scripts
-- GitHub Actions CI for validation on push and pull request
-- a deterministic local eval harness that writes grading and benchmark artifacts
+The contract separates:
 
-The local eval harness currently verifies:
+- metadata about scope, coverage, blind spots, and telemetry
+- normalized findings with evidence, impact, remediation, and framework mappings
 
-- scanner detection on the bundled risky sample repo
-- markdown report generation
-- SARIF-style report generation
+This repository intentionally distinguishes:
 
-The intended operating pattern is:
+- runtime memory: temporary working context for the current assessment
+- project-local persistent memory: repo files such as scripts, references, schema, examples, and evals
+- shared memory: external to this skill and intentionally not embedded here
 
-1. detect candidate issues conservatively
-2. validate context to reduce false positives
-3. report only evidence-backed findings
-4. call out gaps separately from confirmed issues
+## Evaluation Strategy
 
-Run tests with:
+This repository includes two evaluation layers:
+
+### Tooling validation
+
+The Node test suite verifies scanner behavior, report generation, normalization, and local eval output.
+
+Run:
 
 ```powershell
 npm test
 ```
 
-## Versioning
+### Skill activation and workflow validation
 
-Current version: `3.1.0`
-Maintainer / author: `jovd83`
+The repo includes:
 
-The upgrade from the earlier draft focuses on clearer operating boundaries, stronger output contracts, better documentation, more useful helper scripts, and repository-level validation artifacts.
+- [evals/evals.json](./evals/evals.json) for representative user prompts
+- [evals/local-evals.json](./evals/local-evals.json) for deterministic script checks
+- [evals/trigger-evals.json](./evals/trigger-evals.json) for description-trigger review
 
-## Optional Future Integrations
+The trigger eval set exists to support description tuning and to keep the skill's activation boundary honest as the repository evolves.
 
-These are intentionally conceptual and not implemented here:
+## Open-Source Maintainer Notes
 
+This repo aims to be publishable and maintainable, not just internally useful.
+
+Key maintainer expectations:
+
+- keep `SKILL.md` concise and activation-friendly
+- move deep detail into `references/`
+- keep metadata synchronized across `SKILL.md`, `package.json`, and `agents/openai.yaml`
+- prefer deterministic scripts over prompt bloat when work is repetitive
+- treat generated examples as examples, not as the primary source of truth
+
+See:
+
+- [CONTRIBUTING.md](./CONTRIBUTING.md)
+- [SECURITY.md](./SECURITY.md)
+- [CHANGELOG.md](./CHANGELOG.md)
+
+## References
+
+- [references/scope-intake-template.md](./references/scope-intake-template.md)
+- [references/capability-matrix.md](./references/capability-matrix.md)
+- [references/frameworks-guide.md](./references/frameworks-guide.md)
+- [references/detection-methodology.md](./references/detection-methodology.md)
+- [references/external-tooling-guide.md](./references/external-tooling-guide.md)
+- [references/review-checklist.md](./references/review-checklist.md)
+
+## Optional Future Work
+
+These are deliberately out of scope for the current implementation:
+
+- shared-memory integration for cross-project lessons
+- scheduled CI wrappers around the scanner
+- live enrichment against external package or advisory services
 - organization-specific policy packs
-- external CVE enrichment
-- shared-memory integration for durable cross-project lessons
-- scheduled CI wrappers for repository scans
 
-If you add them later, keep them explicitly optional and clearly separated from the core skill behavior.
+If added later, keep them optional and clearly separated from the core skill.

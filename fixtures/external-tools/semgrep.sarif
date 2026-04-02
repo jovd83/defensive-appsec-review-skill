@@ -1,0 +1,52 @@
+{
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Semgrep OSS",
+          "rules": [
+            {
+              "id": "javascript.express.security.audit.express-open-redirect",
+              "name": "Express open redirect",
+              "shortDescription": {
+                "text": "Open redirect pattern"
+              },
+              "fullDescription": {
+                "text": "User-controlled redirect targets should be allow-listed."
+              },
+              "helpUri": "https://semgrep.dev",
+              "properties": {
+                "tags": [
+                  "OWASP Top 10 2021 A01 Broken Access Control",
+                  "CWE-601"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "javascript.express.security.audit.express-open-redirect",
+          "level": "warning",
+          "message": {
+            "text": "Detected a redirect using request-controlled input."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "api.js"
+                },
+                "region": {
+                  "startLine": 22
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

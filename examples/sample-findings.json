@@ -3,9 +3,57 @@
     "target": "sample-risky-repo",
     "target_surface": "repo",
     "standard": "nist-ssdf",
+    "standard_family": "nist-ssdf",
+    "coverage_areas": [
+      "secrets exposure and dependency inventory"
+    ],
+    "blind_spots": [
+      "runtime exploitability still requires validation"
+    ],
+    "source_tools": [
+      "native-heuristic-scan"
+    ],
     "timestamp": "2026-03-25T00:00:00.000Z",
-    "generated_by": "security-testing-skill/examples",
-    "notes": "Illustrative sample output"
+    "generated_by": "defensive-appsec-review-skill/examples",
+    "notes": "Illustrative sample output",
+    "scan_telemetry": {
+      "scan_started_at": "2026-03-25T00:00:00.000Z",
+      "scan_completed_at": "2026-03-25T00:00:00.180Z",
+      "scan_depth": "quick",
+      "files_discovered": 7,
+      "files_scanned": 6,
+      "bytes_scanned": 18432,
+      "heuristic_checks_run": 167,
+      "manifests_detected": 1,
+      "directories_skipped": 1,
+      "skipped_directories": [
+        "node_modules"
+      ],
+      "skipped_files": {
+        "support_material": 1,
+        "oversized": 0,
+        "unreadable": 0
+      },
+      "skipped_file_examples": {
+        "support_material": [
+          "README.md"
+        ],
+        "oversized": [],
+        "unreadable": []
+      },
+      "external_inputs_provided": [],
+      "autodiscovered_external_inputs": [],
+      "external_sources_loaded": [],
+      "external_sources_failed": [],
+      "external_findings_imported": 0,
+      "findings_by_rule": {
+        "Potential hardcoded credential detected (inline secret assignment)": 1
+      },
+      "findings_by_category": {
+        "Credential Management": 1
+      },
+      "elapsed_ms": 180
+    }
   },
   "findings": [
     {
@@ -16,10 +64,37 @@
       "cwe": "CWE-798: Use of Hard-coded Credentials",
       "cvss_v4": "8.6 (High)",
       "confidence": "Medium",
+      "status": "new",
+      "owner": "Security Guild",
+      "due_date": "2026-04-15",
       "framework_mapping": {
         "standard": "nist-ssdf",
-        "control": "Secret exposure prevention"
+        "control": "Secret exposure prevention",
+        "provenance": {
+          "primary": "supplied",
+          "asvs": "supplied",
+          "nist": "supplied",
+          "cis": "supplied",
+          "scvs": "not-recorded",
+          "slsa": "not-recorded",
+          "owasp": "not-recorded"
+        },
+        "asvs": [
+          "OWASP ASVS V8 Data Protection"
+        ],
+        "nist": [
+          "NIST SP 800-218 SSDF PS.1 Protect code, secrets, and related artifacts",
+          "NIST SP 800-218 SSDF RV.1 Ongoing vulnerability identification"
+        ],
+        "cis": [
+          "CIS Controls v8 Control 3 Data Protection"
+        ],
+        "scvs": [],
+        "slsa": [],
+        "owasp": []
       },
+      "verification_tier": "heuristic-static",
+      "source_tool": "native-heuristic-scan",
       "evidence": "Matched inline secret assignment pattern in .env.",
       "reproduction_steps": "1. Open .env.\n2. Review the committed secret-like value.",
       "business_impact": "Live credentials in source code can enable unauthorized access.",

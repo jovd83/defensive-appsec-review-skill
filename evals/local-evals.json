@@ -1,5 +1,5 @@
 {
-  "skill_name": "security-testing-skill",
+  "skill_name": "defensive-appsec-review-skill",
   "evals": [
     {
       "id": 101,
@@ -40,6 +40,34 @@
         "SARIF output uses version 2.1.0",
         "SARIF output contains at least one result",
         "SARIF output includes file location data"
+      ]
+    },
+    {
+      "id": 105,
+      "name": "report-html",
+      "type": "report_html",
+      "inputs": [
+        "examples/sample-findings.json"
+      ],
+      "expectations": [
+        "HTML report contains the target title",
+        "HTML report contains the fixed professional briefing template",
+        "HTML report contains finding content"
+      ]
+    },
+    {
+      "id": 104,
+      "name": "normalize-external-semgrep",
+      "type": "normalize_external",
+      "tool": "sarif",
+      "input": "fixtures/external-tools/semgrep.sarif",
+      "target": ".",
+      "surface": "repo",
+      "standard": "owasp-top10",
+      "expectations": [
+        "Normalized output contains findings",
+        "Normalized output records a source tool",
+        "Normalized output preserves framework mapping"
       ]
     }
   ]

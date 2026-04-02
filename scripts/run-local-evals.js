@@ -5,8 +5,31 @@ const path = require("path");
 const { spawnSync } = require("child_process");
 
 const ROOT = process.cwd();
-const EVALS_PATH = path.join(ROOT, "evals", "local-evals.json");
 const PACKAGE_PATH = path.join(ROOT, "package.json");
+
+function parseArgs(argv) {
+  const args = argv.slice(2);
+  const options = {};
+
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index];
+    if (!arg.startsWith("--")) {
+      continue;
+    }
+
+    const key = arg.slice(2);
+    const next = args[index + 1];
+    if (!next || next.startsWith("--")) {
+      options[key] = true;
+      continue;
+    }
+
+    options[key] = next;
+    index += 1;
+  }
+
+  return options;
+}
 
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, "utf8"));
@@ -81,6 +104,26 @@ function gradeMarkdown(markdown) {
   ];
 }
 
+function gradeHtml(html) {
+  return [
+    {
+      text: "HTML report contains the target title",
+      passed: /Security Assessment Report - sample-risky-repo/.test(html),
+      evidence: "Searched HTML report for the target title."
+    },
+    {
+      text: "HTML report contains the fixed professional briefing template",
+      passed: /Security Assessment Brief/.test(html) && /professional HTML report/i.test(html),
+      evidence: "Checked HTML report for the shared template header."
+    },
+    {
+      text: "HTML report contains finding content",
+      passed: /Potential hardcoded credential detected/.test(html),
+      evidence: "Searched HTML report for a rendered finding title."
+    }
+  ];
+}
+
 function gradeSarif(sarif) {
   return [
     {
@@ -97,6 +140,27 @@ function gradeSarif(sarif) {
       text: "SARIF output includes file location data",
       passed: Boolean(sarif.runs?.[0]?.results?.[0]?.locations?.[0]?.physicalLocation?.artifactLocation?.uri),
       evidence: "Checked first SARIF result for artifact location URI."
+    }
+  ];
+}
+
+function gradeNormalizedExternal(outputJson) {
+  const findings = outputJson.findings || [];
+  return [
+    {
+      text: "Normalized output contains findings",
+      passed: findings.length > 0,
+      evidence: `Observed normalized findings count: ${findings.length}`
+    },
+    {
+      text: "Normalized output records a source tool",
+      passed: findings.some((finding) => typeof finding.source_tool === "string" && finding.source_tool.length > 0),
+      evidence: "Checked normalized findings for source_tool values."
+    },
+    {
+      text: "Normalized output preserves framework mapping",
+      passed: findings.some((finding) => typeof finding.framework_mapping?.standard === "string" && finding.framework_mapping.standard.length > 0),
+      evidence: "Checked normalized findings for framework_mapping.standard."
     }
   ];
 }
@@ -133,10 +197,15 @@ function benchmarkRun(evalId, evalName, configuration, summary, durationSeconds)
 }
 
 function main() {
+  const options = parseArgs(process.argv);
   const packageJson = readJson(PACKAGE_PATH);
-  const evalSuite = readJson(EVALS_PATH);
-  const workspaceRoot = path.resolve(ROOT, "..", `${evalSuite.skill_name}-workspace`);
-  const iterationDir = path.join(workspaceRoot, "local-iteration-1");
+  const evalsPath = path.resolve(ROOT, options.config || path.join("evals", "local-evals.json"));
+  const evalSuite = readJson(evalsPath);
+  const workspaceRoot = options.workspace
+    ? path.resolve(ROOT, options.workspace)
+    : path.resolve(ROOT, "..", `${evalSuite.skill_name}-workspace`);
+  const iterationLabel = String(options.iteration || "local-iteration-1");
+  const iterationDir = path.join(workspaceRoot, iterationLabel);
   ensureDir(iterationDir);
 
   const benchmarkRuns = [];
@@ -187,6 +256,37 @@ function main() {
       ]);
       const sarif = readJson(outputPath);
       expectations = gradeSarif(sarif);
+    } else if (evalItem.type === "report_html") {
+      const outputPath = path.join(outputsDir, "report.html");
+      runNode([
+        path.join("scripts", "generate-report.js"),
+        ...evalItem.inputs,
+        "--format",
+        "html",
+        "--output",
+        outputPath
+      ]);
+      const html = fs.readFileSync(outputPath, "utf8");
+      expectations = gradeHtml(html);
+    } else if (evalItem.type === "normalize_external") {
+      const outputPath = path.join(outputsDir, "normalized.json");
+      runNode([
+        path.join("scripts", "normalize-external-results.js"),
+        "--tool",
+        evalItem.tool,
+        "--input",
+        evalItem.input,
+        "--target",
+        evalItem.target,
+        "--type",
+        evalItem.surface,
+        "--standard",
+        evalItem.standard,
+        "--output",
+        outputPath
+      ]);
+      const outputJson = readJson(outputPath);
+      expectations = gradeNormalizedExternal(outputJson);
     } else {
       throw new Error(`Unsupported eval type: ${evalItem.type}`);
     }
@@ -223,6 +323,9 @@ function main() {
     metadata: {
       skill_name: evalSuite.skill_name,
       skill_path: ROOT,
+      eval_config: path.relative(ROOT, evalsPath).split(path.sep).join("/"),
+      workspace_root: workspaceRoot,
+      iteration: iterationLabel,
       executor_model: "deterministic-local-harness",
       analyzer_model: "deterministic-local-harness",
       timestamp: new Date().toISOString(),
@@ -255,6 +358,7 @@ function main() {
     `# Local Benchmark - ${evalSuite.skill_name}`,
     "",
     `Version: ${packageJson.version}`,
+    `Iteration: ${iterationLabel}`,
     "",
     ...benchmarkRuns.map((run) => `- ${run.eval_name}: pass rate ${run.result.pass_rate}, time ${run.result.time_seconds}s`)
   ].join("\n"));

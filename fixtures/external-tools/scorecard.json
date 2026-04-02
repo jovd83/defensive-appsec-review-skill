@@ -1,0 +1,23 @@
+{
+  "repo": {
+    "name": "demo-repo",
+    "url": "https://github.com/example/demo-repo"
+  },
+  "checks": [
+    {
+      "name": "Dangerous-Workflow",
+      "score": 2,
+      "reason": "The repository uses a risky workflow trigger.",
+      "details": "Review pull_request_target usage and privileged workflow execution.",
+      "documentation": {
+        "url": "https://scorecard.dev",
+        "short": "Dangerous workflows can expose privileged automation."
+      }
+    },
+    {
+      "name": "Code-Review",
+      "score": 9,
+      "reason": "Repository enforces review."
+    }
+  ]
+}
