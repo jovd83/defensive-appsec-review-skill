@@ -4,7 +4,7 @@
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen?logo=node.js&logoColor=white)](https://nodejs.org/)
-[![Validate Skills](https://github.com/jovd83/defensive-appsec-review-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/jovd83/defensive-appsec-review-skill/actions/workflows/ci.yml)
+[![Validate Skills](https://github.com/jovd83/security-testing-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/jovd83/security-testing-skill/actions/workflows/ci.yml)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=flat&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/jovd83)
 
 An enterprise-grade Agent Skill for authorized, non-destructive application security review.
