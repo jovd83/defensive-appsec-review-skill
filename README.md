@@ -1,6 +1,7 @@
 # Defensive AppSec Review Skill
 
 [![Version](https://img.shields.io/badge/version-4.0.0-blue)](https://github.com/jovd83/defensive-appsec-review-skill)
+[![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Validate Skills](https://github.com/jovd83/defensive-appsec-review-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/jovd83/defensive-appsec-review-skill/actions/workflows/ci.yml)
