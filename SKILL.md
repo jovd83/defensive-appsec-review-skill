@@ -263,6 +263,17 @@ Common cases:
 - missing manifests or lockfiles
 - external tool output that needs human validation before promotion into verified findings
 
+## Gotchas
+
+- **Node.js 18+ Required**: Automation scripts (`scripts/*.js`) require Node.js 18 or higher. They will fail on older runtimes.
+- **Target Must Be a Directory**: The `audit-scan.js` script expects a `--target` that is a directory. Passing a single file path will result in an error.
+- **Default Exclusions**: Directories like `node_modules`, `.git`, `dist`, `build`, and `target` are skipped by default to ensure performance and reduce noise. If you need to scan these, you must manually review them or modify the script constants.
+- **File Size Limits**: Files exceeding 1MB are skipped by the scanner to prevent memory exhaustion and hanging. These are recorded as "oversized" in the scan telemetry.
+- **Passive-Only Enforcement**: This skill is intentionally designed to be non-destructive. It will refuse to perform active exploitation, credential brute-forcing, or any action that could impact production stability.
+- **Confidence Levels**: Not all findings are verified. Some may be marked with `Low` or `Medium` confidence or labeled `needs manual verification`. Always review the `evidence` field before acting on a finding.
+- **Normalization Tool Compatibility**: `normalize-external-results.js` supports specific formats (SARIF, Gitleaks, Trivy, OSV-Scanner, Scorecard, Dependency-Check). If your tool's output isn't in one of these formats, normalization will fail.
+- **Autodiscovery for Deep Scans**: When using `--depth deep`, the scanner searches for common tool outputs (e.g., `semgrep.sarif`, `trivy.json`) in the current directory and `sandbox/`. Ensure your external results are named correctly or provide them explicitly using `--deep-inputs`.
+
 ## Resource Map
 
 Load deeper resources only when needed:
