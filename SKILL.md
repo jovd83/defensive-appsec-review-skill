@@ -4,8 +4,10 @@ description: Use when you need an authorized, scoped, non-destructive security r
 license: MIT. See LICENSE
 compatibility: Designed for Agent Skills compatible coding agents. Bundled automation requires Node.js 18+ when running scripts. Local file access is sufficient for the core workflow; network access is optional and should not be assumed.
 metadata:
+    dispatcher-layer: feedback
+    dispatcher-lifecycle: active
   display-name: Defensive AppSec Review Skill
-  version: "4.0.0"
+  version: "4.1.0"
   author: jovd83
   category: security
   maturity: production
@@ -23,6 +25,12 @@ metadata:
 Perform defensive, evidence-based application security assessments for authorized targets.
 
 Use this skill to turn a vague "security check" request into a scoped, non-destructive review with clear findings, honest blind spots, and remediation-ready output. Prefer passive analysis, deterministic evidence collection, and explicit limits over speculative or offensive behavior.
+
+
+## Telemetry & Logging
+> [!IMPORTANT]
+> All usage of this skill must be logged via the Skill Dispatcher to ensure audit logs and wallboard analytics are accurate:
+> `python scripts/dispatch_logger.py --skill <skill_name> --intent <intent> --reason <reason>`
 
 ## Outcomes This Skill Owns
 
