@@ -3,7 +3,7 @@ interface:
   short_description: "Run authorized, scoped, non-destructive security reviews with evidence-backed findings"
   default_prompt: "Use $defensive-appsec-review-skill to perform an authorized, scoped, non-destructive security assessment of a repository, API, web app, mobile app, IaC stack, CI/CD workflow, or AI-enabled application. Choose the narrowest safe review mode, keep the work passive unless explicitly authorized otherwise, and return evidence-backed findings, remediation guidance, and clear blind spots."
   author: "jovd83"
-  version: "4.0.0"
+  version: "4.1.0"
 
 policy:
   allow_implicit_invocation: true

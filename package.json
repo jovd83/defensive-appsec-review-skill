@@ -1,6 +1,6 @@
 {
   "name": "defensive-appsec-review-skill",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "author": "jovd83",
   "description": "Enterprise-grade defensive security assessment Agent Skill with deterministic helper scripts and reporting workflows.",
   "license": "MIT",

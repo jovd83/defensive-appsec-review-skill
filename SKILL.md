@@ -6,19 +6,19 @@ compatibility: Designed for Agent Skills compatible coding agents. Bundled autom
 metadata:
     dispatcher-layer: feedback
     dispatcher-lifecycle: active
-  display-name: Defensive AppSec Review Skill
-  version: "4.1.0"
-  author: jovd83
-  category: security
-  maturity: production
-  dispatcher-output-artifacts: security_findings, remediation_report, review_plan
-  dispatcher-risk: medium
-  dispatcher-writes-files: true
-  dispatcher-input-artifacts: repository_context, scanner_results, architecture_notes, review_scope
-  dispatcher-capabilities: defensive-appsec-review, security-triage, remediation-reporting
-  dispatcher-stack-tags: security, appsec, review
-  dispatcher-accepted-intents: review_application_security, triage_security_findings, plan_security_review
-  dispatcher-category: security
+    display-name: Defensive AppSec Review Skill
+    version: "4.1.0"
+    author: jovd83
+    category: security
+    maturity: production
+    dispatcher-output-artifacts: security_findings, remediation_report, review_plan
+    dispatcher-risk: medium
+    dispatcher-writes-files: true
+    dispatcher-input-artifacts: repository_context, scanner_results, architecture_notes, review_scope
+    dispatcher-capabilities: defensive-appsec-review, security-triage, remediation-reporting
+    dispatcher-stack-tags: security, appsec, review
+    dispatcher-accepted-intents: review_application_security, triage_security_findings, plan_security_review
+    dispatcher-category: security
 ---
 # Defensive AppSec Review Skill
 

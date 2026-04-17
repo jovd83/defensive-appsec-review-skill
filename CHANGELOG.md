@@ -1,4 +1,10 @@
 # Changelog
++
++## 4.1.0 - 2026-04-17
++
++- Fixed YAML parsing errors in `SKILL.md` frontmatter indentation
++- Synchronized project version to 4.1.0 across all configuration files (`SKILL.md`, `package.json`, `agents/openai.yaml`, `README.md`)
++
 
 All notable changes to this project will be documented in this file.
 

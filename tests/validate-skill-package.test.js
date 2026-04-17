@@ -9,7 +9,7 @@ test("validate-skill-package keeps repository metadata aligned", () => {
   assert.equal(result.ok, true);
   assert.equal(result.skill.name, "defensive-appsec-review-skill");
   assert.equal(result.skill.display_name, "Defensive AppSec Review Skill");
-  assert.equal(result.skill.version, "4.0.0");
+  assert.equal(result.skill.version, require("../package.json").version);
   assert.equal(result.skill.author, "jovd83");
   assert.deepEqual(result.issues, []);
 });
