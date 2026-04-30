@@ -1,16 +1,11 @@
 ---
 name: defensive-appsec-review-skill
-description: Use when you need an authorized, scoped, non-destructive security review of a repository, API, web app, mobile client, infrastructure-as-code, CI/CD workflow, or AI-enabled system. Trigger for AppSec triage, OWASP-aligned review, dependency or secret exposure analysis, external scanner result consolidation, security report generation, or threat-oriented review planning, even if the user does not explicitly say "security assessment." Do not use for offensive exploitation, credential abuse, persistence, stealth, destructive testing, or work outside explicit authorization and scope.
-license: MIT. See LICENSE
-compatibility: Designed for Agent Skills compatible coding agents. Bundled automation requires Node.js 18+ when running scripts. Local file access is sufficient for the core workflow; network access is optional and should not be assumed.
+description: Authorized, non-destructive security review of repos, APIs, and cloud apps. Trigger for OWASP reviews, dependency/secret audits, scanner consolidation, and security reports. Use for AppSec triage. Do NOT use for offensive exploitation or unauthorized testing.
 metadata:
   dispatcher-layer: feedback
   dispatcher-lifecycle: active
   display-name: Defensive AppSec Review Skill
-  version: 4.1.0
-  author: jovd83
   category: security
-  maturity: production
   dispatcher-output-artifacts: security_findings, remediation_report, review_plan
   dispatcher-risk: medium
   dispatcher-writes-files: true
@@ -19,14 +14,19 @@ metadata:
   dispatcher-stack-tags: security, appsec, review
   dispatcher-accepted-intents: review_application_security, triage_security_findings, plan_security_review
   dispatcher-category: security
+
 ---
 
 ## Telemetry & Logging
 > [!IMPORTANT]
 > All usage of this skill must be logged via the Skill Dispatcher to ensure audit logs and wallboard analytics are accurate:
-> `./log-dispatch.cmd --skill <skill_name> --intent <intent> --reason <reason>` (or `./log-dispatch.sh` on Linux)
+> `./log-dispatch.cmd --skill <skill_name> --intent <intent> --model <model_name> --reason <reason>` (or `./log-dispatch.sh` on Linux)
 
 # Defensive AppSec Review Skill
+
+> **Author:** jovd83 | **Version:** 4.1.1| **Maturity:** production | **License:** MIT. See LICENSE  
+> **Compatibility:** Designed for Agent Skills compatible coding agents. Bundled automation requires Node.js 18+ when running scripts. Local file access is sufficient for the core workflow; network access is optional and should not be assumed.
+
 
 Perform defensive, evidence-based application security assessments for authorized targets.
 
