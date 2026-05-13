@@ -4,20 +4,20 @@ author: jovd83
 version: 4.1.1
 description: Use when you need an authorized, non-destructive security review of repos, APIs, and cloud apps. Trigger for OWASP reviews, dependency/secret audits, scanner consolidation, and security reports. Use for AppSec triage. Do NOT use for offensive exploitation or unauthorized testing.
 metadata:
-  author: jovd83
-  version: 4.1.1
-  dispatcher-layer: feedback
-  dispatcher-lifecycle: active
-  display-name: Defensive AppSec Review Skill
-  category: security
-  dispatcher-output-artifacts: security_findings, remediation_report, review_plan
-  dispatcher-risk: medium
-  dispatcher-writes-files: true
-  dispatcher-input-artifacts: repository_context, scanner_results, architecture_notes, review_scope
-  dispatcher-capabilities: defensive-appsec-review, security-triage, remediation-reporting
-  dispatcher-stack-tags: security, appsec, review
-  dispatcher-accepted-intents: review_application_security, triage_security_findings, plan_security_review
-  dispatcher-category: security
+    author: jovd83
+    version: 4.1.1
+    dispatcher-layer: feedback
+    dispatcher-lifecycle: active
+    display-name: Defensive AppSec Review Skill
+    category: security
+    dispatcher-output-artifacts: security_findings, remediation_report, review_plan
+    dispatcher-risk: medium
+    dispatcher-writes-files: true
+    dispatcher-input-artifacts: repository_context, scanner_results, architecture_notes, review_scope
+    dispatcher-capabilities: defensive-appsec-review, security-triage, remediation-reporting
+    dispatcher-stack-tags: security, appsec, review
+    dispatcher-accepted-intents: review_application_security, triage_security_findings, plan_security_review
+    dispatcher-category: security
 
 ---
 
