@@ -2,7 +2,7 @@
 name: defensive-appsec-review-skill
 author: jovd83
 version: 4.1.1
-description: Authorized, non-destructive security review of repos, APIs, and cloud apps. Trigger for OWASP reviews, dependency/secret audits, scanner consolidation, and security reports. Use for AppSec triage. Do NOT use for offensive exploitation or unauthorized testing.
+description: Use when you need an authorized, non-destructive security review of repos, APIs, and cloud apps. Trigger for OWASP reviews, dependency/secret audits, scanner consolidation, and security reports. Use for AppSec triage. Do NOT use for offensive exploitation or unauthorized testing.
 metadata:
   author: jovd83
   version: 4.1.1
