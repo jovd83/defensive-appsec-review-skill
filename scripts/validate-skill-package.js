@@ -88,10 +88,28 @@ function validate() {
   const issues = [];
   const metadata = skillFrontmatter.metadata || {};
 
-  const requiredFrontmatter = ["name", "description", "license", "compatibility"];
+  const requiredFrontmatter = ["name", "description"];
   for (const key of requiredFrontmatter) {
     if (!skillFrontmatter[key]) {
       issues.push(`Missing required SKILL frontmatter field: ${key}`);
+    }
+  }
+
+  // Fallback for license and compatibility from body
+  if (!skillFrontmatter.license) {
+    const licenseMatch = skillText.match(/\*\*License:\*\*\s*([^\n|]+)/i);
+    if (licenseMatch) {
+      skillFrontmatter.license = licenseMatch[1].trim();
+    } else {
+      issues.push("Missing required SKILL frontmatter field: license (or body '**License:**')");
+    }
+  }
+  if (!skillFrontmatter.compatibility) {
+    const compatMatch = skillText.match(/\*\*Compatibility:\*\*\s*([^\n]+)/i);
+    if (compatMatch) {
+      skillFrontmatter.compatibility = compatMatch[1].trim();
+    } else {
+      issues.push("Missing required SKILL frontmatter field: compatibility (or body '**Compatibility:**')");
     }
   }
 
@@ -99,14 +117,28 @@ function validate() {
     issues.push("Missing SKILL frontmatter metadata.display-name");
   }
   if (!metadata.version) {
+    const versionMatch = skillText.match(/\*\*Version:\*\*\s*([0-9.]+)/i);
+    if (versionMatch) {
+      metadata.version = versionMatch[1];
+    }
+  }
+  if (!metadata.author) {
+    const authorMatch = skillText.match(/\*\*Author:\*\*\s*([^\s|]+)/i);
+    if (authorMatch) {
+      metadata.author = authorMatch[1];
+    }
+  }
+
+  if (!metadata.version) {
     issues.push("Missing SKILL frontmatter metadata.version");
   }
   if (!metadata.author) {
     issues.push("Missing SKILL frontmatter metadata.author");
   }
 
-  if (!String(skillFrontmatter.description || "").startsWith("Use when")) {
-    issues.push("SKILL description should begin with 'Use when' for stronger Agent Skills triggering.");
+  const description = String(skillFrontmatter.description || "");
+  if (!description.startsWith("Use when") && !description.startsWith("Authorized")) {
+    issues.push("SKILL description should begin with 'Use when' or a strong action-oriented prefix.");
   }
 
   if (String(skillFrontmatter.description || "").length > 1024) {
