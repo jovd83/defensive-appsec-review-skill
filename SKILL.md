@@ -1,7 +1,11 @@
 ---
 name: defensive-appsec-review-skill
+author: jovd83
+version: 4.1.1
 description: Authorized, non-destructive security review of repos, APIs, and cloud apps. Trigger for OWASP reviews, dependency/secret audits, scanner consolidation, and security reports. Use for AppSec triage. Do NOT use for offensive exploitation or unauthorized testing.
 metadata:
+  author: jovd83
+  version: 4.1.1
   dispatcher-layer: feedback
   dispatcher-lifecycle: active
   display-name: Defensive AppSec Review Skill
@@ -339,3 +343,13 @@ Expected behavior:
 - Keep this file activation-friendly and move deep detail into `references/`.
 - Keep metadata aligned with `package.json`, `README.md`, and `agents/openai.yaml`.
 - Prefer adding deterministic tooling or reference material over bloating the main prompt.
+
+## Telemetry & Logging
+
+When using this skill, agents MUST log the following telemetry to the project's security audit ledger:
+- Assessment mode and standards used
+- Scope and trust boundaries identified
+- Verified findings and remediation recommendations
+- Intentional blind spots and deferred checks
+- Tooling versions and scan duration
+- Resource map and script usage for traceability
