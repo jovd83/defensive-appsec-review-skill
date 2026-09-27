@@ -1,11 +1,12 @@
 ---
 name: defensive-appsec-review-skill
 author: jovd83
-version: 4.1.1
+version: 4.2.0
 description: Use when you need an authorized, non-destructive security review of repos, APIs, and cloud apps. Trigger for OWASP reviews, dependency/secret audits, scanner consolidation, and security reports. Use for AppSec triage. Do NOT use for offensive exploitation or unauthorized testing.
+context: fork
 metadata:
     author: jovd83
-    version: 4.1.1
+    version: 4.2.0
     dispatcher-layer: feedback
     dispatcher-lifecycle: active
     display-name: Defensive AppSec Review Skill
@@ -23,13 +24,23 @@ metadata:
 
 # Defensive AppSec Review Skill
 
-> **Author:** jovd83 | **Version:** 4.1.1| **Maturity:** production | **License:** MIT. See LICENSE  
+> **Author:** jovd83 | **Version:** 4.2.0| **Maturity:** production | **License:** MIT. See LICENSE  
 > **Compatibility:** Designed for Agent Skills compatible coding agents. Bundled automation requires Node.js 18+ when running scripts. Local file access is sufficient for the core workflow; network access is optional and should not be assumed.
 
 
 Perform defensive, evidence-based application security assessments for authorized targets.
 
 Use this skill to turn a vague "security check" request into a scoped, non-destructive review with clear findings, honest blind spots, and remediation-ready output. Prefer passive analysis, deterministic evidence collection, and explicit limits over speculative or offensive behavior.
+
+## Forked Run
+
+In Claude Code this skill runs in a forked subagent (`context: fork`). It starts without the conversation history and cannot ask the user anything mid-run, so:
+
+- Take the target, scope and output location from the invocation arguments. When one is missing, use the defaults in this file and state the assumption in the result instead of asking.
+- Keep verbose tool output (scanner logs, file dumps) inside this run. When the report is long, write it to the output location this file defines, or to a file you name in the result.
+- End with a final message the main conversation can act on: the verdict or summary, the most important findings, and the path of every file written.
+
+Other harnesses load this file inline; there the workflow below applies unchanged, including any questions it asks.
 
 ## Outcomes This Skill Owns
 

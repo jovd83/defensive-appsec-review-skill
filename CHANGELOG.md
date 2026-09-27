@@ -1,12 +1,17 @@
 # Changelog
-+
-+## 4.1.0 - 2026-04-17
-+
-+- Fixed YAML parsing errors in `SKILL.md` frontmatter indentation
-+- Synchronized project version to 4.1.0 across all configuration files (`SKILL.md`, `package.json`, `agents/openai.yaml`, `README.md`)
-+
 
 All notable changes to this project will be documented in this file.
+
+## 4.2.0 - 2026-09-27
+
+- `context: fork`: in Claude Code the skill runs in a forked subagent, so its scans and tool output stay out of the main conversation and only the result comes back.
+- New "Forked Run" section: take the scope from the invocation arguments, state assumptions instead of asking mid-run, and end with a summary plus the paths of the written files.
+- Repaired the changelog: the 4.1.0 entry had been pasted with diff `+` markers above the introduction.
+
+## 4.1.0 - 2026-04-17
+
+- Fixed YAML parsing errors in `SKILL.md` frontmatter indentation
+- Synchronized project version to 4.1.0 across all configuration files (`SKILL.md`, `package.json`, `agents/openai.yaml`, `README.md`)
 
 ## 4.0.0 - 2026-04-01
 
