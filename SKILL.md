@@ -270,7 +270,7 @@ Do not store secrets, tokens, or target-sensitive evidence beyond what the user 
 
 ### Shared memory
 
-Shared memory is out of scope for this skill. If broader cross-agent reuse is needed, integrate with an external shared-memory skill rather than embedding that infrastructure here.
+Shared memory is out of scope for this skill. If broader cross-agent reuse is needed, use the agent's own memory (for example CLAUDE.md or AGENTS.md) rather than embedding that infrastructure here.
 
 ## Error Handling
 
